@@ -1,8 +1,9 @@
 
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-function NavbarButton({ href, icon, label }: { href: string; icon: any; label: string }) {
+function NavbarButton({ href, icon, label }: { href: string; icon: IconDefinition; label: string }) {
   return (
     <div>
       <Link href={href} passHref>
