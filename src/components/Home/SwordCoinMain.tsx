@@ -91,14 +91,12 @@ export default function MainPage({ user: initialUser }: userType) {
       setUser((prevUser) => {
         let newCoin = prevUser.coins + user.earnPerTap;
         let newLig = prevUser.lig;
-        let hasLeveledUp = false;
         let earnedCoin = 0;
   
         // Lig güncellemesini kontrol et
         if (ligCoin[prevUser.lig + 1] && newCoin >= ligCoin[prevUser.lig + 1]) {
           newLig = prevUser.lig + 1;
           earnedCoin = ligEearningCoin[newLig];
-          hasLeveledUp = true; // Lig atlandıysa true yap
         }
         newCoin = newCoin + earnedCoin; 
   

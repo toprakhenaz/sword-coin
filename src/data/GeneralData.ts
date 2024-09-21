@@ -43,9 +43,6 @@ export const useLeagueData = () => {
     return ligCoin[league] || 0;
   };
 
-  const getLeagueEarningCoin = (league: number) => {
-    return ligEearningCoin[league] || 0;
-  };
 
   return { getLeagueImage, getLeagueColor, getLeagueCoin };
 };
