@@ -7,3 +7,34 @@
   height: 30%; 
 }
 
+.central-button {
+  position: relative;
+  width: 15rem; 
+  height: 15rem; 
+  border-radius: 50%;
+  overflow: hidden;
+  border: 8px solid rgba(255, 69, 0, 0.7);
+  background: linear-gradient(135deg, rgba(255, 140, 0, 0.5), rgba(255, 0, 0, 0.5));
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.7);
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  transition: transform 0.3s ease;
+}
+              
+.central-button:hover {
+transform: scale(0.95); 
+box-shadow: 0 0 20px rgba(255, 69, 0, 0.9);
+border-color: rgba(255, 69, 0, 0.9); 
+}
+
+.central-button:active {
+transform: scale(0.9); 
+}
+
+.central-button img {
+max-width: 80%; 
+max-height: 80%; 
+object-fit: contain; 
+}
+
