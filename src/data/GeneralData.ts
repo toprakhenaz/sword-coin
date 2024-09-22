@@ -17,6 +17,27 @@ export const ligEearningCoin: Record<number, number> = {
   4: 900,
 }
 
+const date = new Date( 1684275200000);
+
+export const user = {
+  userName: 'ali',
+  userId: 2,
+  coins: 2000000000,
+  energy: 200,
+  maxEnergy: 500,
+  lig: 1,
+  hourlyEarn: 200,
+  earnPerTap: 3,
+  lastBoostTime: new Date(),
+  dailyBoostCount: 3,
+  cards: [
+    { id: 1, level: 2 },
+    { id: 3, level: 1 },
+  ],
+  dailyCombo: [1,5,7], // Günlük combo kart ID'leri burada
+  foundCards: [], // Bulunan kartların ID'leri burada
+};
+
 
 export const useLeagueData = () => {
   const getLeagueImage = (league: number) => {
