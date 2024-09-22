@@ -28,7 +28,7 @@ export const user = {
   lig: 1,
   hourlyEarn: 200,
   earnPerTap: 3,
-  lastBoostTime: new Date(),
+  lastBoostTime: date,
   dailyBoostCount: 3,
   cards: [
     { id: 1, level: 2 },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import Header from './Header';
 import TimerBar from './TimeBar';
 import Card from './Card';
@@ -44,17 +44,17 @@ const initialCards: CardData[] = [
   { id: 16, name: "H-Class Worker", image: "/card-images/workers/h-rank.png", hourlyIncome: 700, level: 0, upgradeCost: 9000, category: "İşçiler" },
 ];
 
-
 const MainPage = () => {
   const [cards, setCards] = useState<CardData[]>(initialCards);
   const [coins, setCoins] = useState(user.coins);
   const [hourlyEarn, setHourlyEarn] = useState(user.hourlyEarn);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
-  const [dailyCombo, setDailyCombo] = useState<number[]>([1, 3, 5]); // Örneğin günlük combo kartlarını sabit olarak belirledik.
-  const [foundCards, setFoundCards] = useState<number[]>([]); // Bulunan kartlar ID'leri
+  const [foundCards, setFoundCards] = useState<number[]>(user.foundCards); // Bulunan kartlar
   const [activeCategory, setActiveCategory] = useState("Ekipman");
 
+  // Günlük comboyu user'dan alıyoruz
+  const dailyCombo = user.dailyCombo;
   const calculateUpgradeCost = (level: number, oldCost: number) => {
     return Math.pow(2, level) * 50 + oldCost;
   };
@@ -86,7 +86,8 @@ const MainPage = () => {
 
             // Kart günlük combo içinde mi kontrol ediliyor ve bulunmuş kartlara ekleniyor
             if (dailyCombo.includes(card.id) && !foundCards.includes(card.id)) {
-              setFoundCards([...foundCards, card.id]); // Kart bulunduysa ekle
+              const updatedFoundCards = [...foundCards, card.id];
+              setFoundCards(updatedFoundCards);
             }
 
             return {
