@@ -28,15 +28,18 @@ export const user = {
   lig: 1,
   hourlyEarn: 200,
   earnPerTap: 3,
-  lastBoostTime: date,
+  lastBoostTime: date, // or your specific date
   dailyBoostCount: 3,
   cards: [
     { id: 1, level: 2 },
     { id: 3, level: 1 },
   ],
-  dailyCombo: [1,5,7], // Günlük combo kart ID'leri burada
-  foundCards: [], // Bulunan kartların ID'leri burada
+  dailyCombo: [1, 5, 7], // Daily combo card IDs
+  foundCards: [], // Found card IDs
+  lastRewardDate: '', // Date of the last reward claim
+  rewardStreak: 0, // Current streak count
 };
+
 
 
 export const useLeagueData = () => {

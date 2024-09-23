@@ -1,6 +1,6 @@
 import MainPage from "@/components/Mine/SwordCoinMine"
 
-export default function page() {
+export default function Mine(){
   return (
     <MainPage />
   )
