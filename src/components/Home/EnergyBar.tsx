@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBolt, faRocket } from '@fortawesome/free-solid-svg-icons';
+import { icons } from '@/icons';
+import { EnergyBarProps } from '@/types';
 
-export default function EnergyBar({ energy, maxEnergy, boost } : {energy : number ,maxEnergy : number, boost : () => void;}) {
+export default function EnergyBar({ energy, maxEnergy, boost } : EnergyBarProps) {
   return (
     <div className="flex items-center space-x-4">
       <div className="flex-grow space-y-2">
@@ -20,12 +21,12 @@ export default function EnergyBar({ energy, maxEnergy, boost } : {energy : numbe
             }}
           ></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <FontAwesomeIcon icon={faBolt} className="text-yellow-400 text-lg" />
+            <FontAwesomeIcon icon={icons.bolt} className="text-yellow-400 text-lg" />
           </div>
         </div>
       </div>
       <button className="boost-button w-12 h-12 bg-gradient-to-r from-purple-400 to-red-500 text-white font-bold rounded-full shadow-lg hover:from-purple-500 hover:to-red-600 transition-all flex items-center justify-center transform scale-110 ml-4" onClick={boost}>
-        <FontAwesomeIcon icon={faRocket} className="text-lg" />
+        <FontAwesomeIcon icon={icons.rocket} className="text-lg" />
       </button>
     </div>
   );

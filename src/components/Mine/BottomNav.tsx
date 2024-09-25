@@ -1,11 +1,6 @@
-import React from 'react';
+import { BottomNavProps } from "@/types";
 
-interface BottomNavProps {
-  activeCategory: string;
-  setActiveCategory: (category: string) => void;
-}
-
-const BottomNav: React.FC<BottomNavProps> = ({ activeCategory, setActiveCategory }) => {
+export default function BottomNav( { activeCategory, setActiveCategory } : BottomNavProps) {
   const categories = ["Ekipman", "İşçiler", "Hizmetler", "Özel"];
 
   return (
@@ -24,5 +19,3 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeCategory, setActiveCategory
     </div>
   );
 };
-
-export default BottomNav;

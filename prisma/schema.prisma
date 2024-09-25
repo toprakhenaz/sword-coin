@@ -1,0 +1,39 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" 
+}
+
+model UserCardData {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  level  Int
+}
+
+model Refferance {
+  id               Int  @id @default(autoincrement())
+  user             User @relation(fields: [userId], references: [id])
+  userId           Int
+  refferanceAmount Int
+  isClaimed        Boolean
+  previousLig      Int
+}
+
+model User {
+  id               Int           @id @default(autoincrement())
+  userName         String
+  energy           Int
+  maxEnergy        Int
+  coins            Int
+  hourlyEarning    Int
+  userLig          Int
+  isBoosted        Boolean
+  boostMinute      Int
+  cards            UserCardData[]
+  refferances      Refferance[]
+}

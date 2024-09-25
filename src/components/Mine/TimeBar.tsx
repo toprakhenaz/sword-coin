@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
-import { faClock, faCoins, faInfoCircle, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { icons } from '@/icons';
+import { TimerBarProps } from '@/types';
 
-interface TimerBarProps {
-  dailyCombo: number[]; // Günlük combo kartları id'leri
-  foundCards: number[]; // Bulunan kartların id'leri
-}
-
-const TimerBar: React.FC<TimerBarProps> = ({ dailyCombo, foundCards }) => {
+export default function TimerBar ({ dailyCombo, foundCards } :TimerBarProps) {
   const [timeLeft, setTimeLeft] = useState<number>(18377); // 5 saat 6 dakika 17 saniye
-
+  console.log("Rerendered timebar");
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -35,16 +31,16 @@ const TimerBar: React.FC<TimerBarProps> = ({ dailyCombo, foundCards }) => {
     <>
       <div className="bg-gray-800 rounded-lg p-3 sm:p-4 flex items-center justify-between">
         <div className="flex items-center">
-          <FontAwesomeIcon icon={faClock} className="text-xl mr-2 text-yellow-300" />
+          <FontAwesomeIcon icon={icons.clock} className="text-xl mr-2 text-yellow-300" />
           <div>
             <div className="text-sm sm:text-base font-semibold">Daily Combo</div>
             <div className="text-xs sm:text-sm text-gray-400">{formatTime(timeLeft)}</div>
           </div>
         </div>
         <div className="flex items-center ml-4">
-          <FontAwesomeIcon icon={faCoins} className="text-yellow-400 mr-2" />
+          <FontAwesomeIcon icon={icons.coins} className="text-yellow-400 mr-2" />
           <span className="text-lg sm:text-xl font-bold">5,000,000</span>
-          <FontAwesomeIcon icon={faInfoCircle} className="ml-3" />
+          <FontAwesomeIcon icon={icons.infoCircle} className="ml-3" />
         </div>
       </div>
 
@@ -54,7 +50,7 @@ const TimerBar: React.FC<TimerBarProps> = ({ dailyCombo, foundCards }) => {
             {foundCards.includes(cardId) ? (
               <img src={`/images/cards/${cardId}.png`} alt={`Card ${cardId}`} className="w-full h-auto" />
             ) : (
-              <FontAwesomeIcon icon={faQuestion} className="text-6xl text-yellow-400" />
+              <FontAwesomeIcon icon={icons.question} className="text-6xl text-yellow-400" />
             )}
           </div>
         ))}
@@ -62,5 +58,3 @@ const TimerBar: React.FC<TimerBarProps> = ({ dailyCombo, foundCards }) => {
     </>
   );
 };
-
-export default TimerBar;

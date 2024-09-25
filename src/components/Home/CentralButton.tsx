@@ -1,15 +1,9 @@
 import Image from 'next/image';
 import { ligImage } from '@/data/GeneralData';
+import { CentralButtonProps } from '@/types';
 
 
-interface CentralButtonProps {
-  onClick: () => void; 
-  league : number
-}
-
-
-
-const CentralButton: React.FC<CentralButtonProps> = ({ onClick, league }) => {
+export default function CentralButton ({ onClick, league } :CentralButtonProps){
 
   return (
     <div className="flex-grow flex items-center justify-center relative">
@@ -36,5 +30,3 @@ const CentralButton: React.FC<CentralButtonProps> = ({ onClick, league }) => {
     </div>
   );
 };
-
-export default CentralButton;

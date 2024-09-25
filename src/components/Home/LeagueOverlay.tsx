@@ -1,20 +1,18 @@
-'use client'; // Next.js specific directive to indicate client-side rendering
+'use client'; 
 
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins, faTimes, faStar, faChevronLeft, faChevronRight, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { icons } from '@/icons';
+import { LeagueOverlayProps } from '@/types';
 import { useLeagueData } from '@/data/GeneralData'; 
 import { leaderboardData } from '@/data/leaderboardData';
 import Image from 'next/image'; 
 
-interface LeagueOverlayProps {
-  onClose: () => void;
-  coins: number;  
-}
 
-const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
+
+export default function LeagueOverlay({ onClose, coins } : LeagueOverlayProps)  {
   const [currentLeague, setCurrentLeague] = useState<number>(3);
-  const totalLeagues = 3;
+  const totalLeagues =Object.keys(leaderboardData).length;;
   const sliderRef = useRef<HTMLDivElement>(null);
   const { getLeagueImage, getLeagueColor, getLeagueCoin } = useLeagueData();
   const totalNeeded = getLeagueCoin(currentLeague);
@@ -52,7 +50,7 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
         onClick={onClose}
         className="absolute top-4 right-4 text-2xl text-yellow-400 hover:text-red-400 transition-colors"
       >
-        <FontAwesomeIcon icon={faTimes} />
+        <FontAwesomeIcon icon={icons.times} />
       </button>
 
       {/* League Image and Navigation */}
@@ -66,8 +64,8 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
             <Image
               src={getLeagueImage(currentLeague)}
               alt={`League ${currentLeague}`}
-              width={200}
-              height={200}
+              width={300}
+              height={300}
               className="mx-auto relative z-10"
             />
           </div>
@@ -78,19 +76,19 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
             onClick={handlePrevLeague}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-yellow-400 text-gray-900 rounded-full p-2 hover:bg-yellow-300 transition-colors"
           >
-            <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+            <FontAwesomeIcon icon={icons.chevronLeft} size="lg" />
           </button>
           <button
             onClick={handleNextLeague}
             className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-yellow-400 text-gray-900 rounded-full p-2 hover:bg-yellow-300 transition-colors"
           >
-            <FontAwesomeIcon icon={faChevronRight} size="lg" />
+            <FontAwesomeIcon icon={icons.chevronRight} size="lg" />
           </button>
         </div>
 
         {/* Coin Progress */}
         <div className="text-yellow-400 text-2xl flex items-center">
-          <FontAwesomeIcon icon={faCoins} className="mr-2" />
+          <FontAwesomeIcon icon={icons.coins} className="mr-2" />
           {coins !== undefined ? coins.toLocaleString() : '0'} / {totalNeeded !== undefined ? totalNeeded.toLocaleString() : '0'}
         </div>
 
@@ -125,7 +123,7 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
                   <div className="flex items-center">
                     {index < 3 ? (
                       <FontAwesomeIcon
-                        icon={faStar}
+                        icon={icons.star}
                         className={`mr-2 text-lg ${index === 0 ? 'text-yellow-400' : index === 1 ? 'text-gray-400' : 'text-yellow-700'}`}
                       />
                     ) : (
@@ -141,7 +139,7 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
                     <span className="text-lg font-bold">{user.name}</span>
                   </div>
                   <div className="text-yellow-400 text-lg font-semibold">
-                    {user.coins.toLocaleString()} <FontAwesomeIcon icon={faCoins} />
+                    {user.coins.toLocaleString()} <FontAwesomeIcon icon={icons.coins} />
                   </div>
                 </div>
               ))}
@@ -150,13 +148,13 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
               onClick={() => handleSliderScroll('up')}
               className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-400 text-gray-900 rounded-full p-1 hover:bg-yellow-300 transition-colors"
             >
-              <FontAwesomeIcon icon={faChevronUp} />
+              <FontAwesomeIcon icon={icons.chevronUp} />
             </button>
             <button
               onClick={() => handleSliderScroll('down')}
               className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-yellow-400 text-gray-900 rounded-full p-1 hover:bg-yellow-300 transition-colors"
             >
-              <FontAwesomeIcon icon={faChevronDown} />
+              <FontAwesomeIcon icon={icons.chevronDown} />
             </button>
           </div>
         </div>
@@ -166,4 +164,3 @@ const LeagueOverlay: React.FC<LeagueOverlayProps> = ({ onClose, coins }) => {
   );
 };
 
-export default LeagueOverlay;

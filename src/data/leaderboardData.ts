@@ -27,5 +27,40 @@ export const leaderboardData: Record<number, LeaderboardEntry[]> = {
     { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
     { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
   ],
+  4: [
+    { id: 11, name: "pro1", coins: 98.7, avatar: "/api/placeholder/40/40" },
+    { id: 12, name: "pro2", coins: 97.5, avatar: "/api/placeholder/40/40" },
+    { id: 13, name: "pro3", coins: 96.2, avatar: "/api/placeholder/40/40" },
+    { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
+    { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
+  ],
+  5: [
+    { id: 11, name: "pro1", coins: 98.7, avatar: "/api/placeholder/40/40" },
+    { id: 12, name: "pro2", coins: 97.5, avatar: "/api/placeholder/40/40" },
+    { id: 13, name: "pro3", coins: 96.2, avatar: "/api/placeholder/40/40" },
+    { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
+    { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
+  ],
+  6: [
+    { id: 11, name: "pro1", coins: 98.7, avatar: "/api/placeholder/40/40" },
+    { id: 12, name: "pro2", coins: 97.5, avatar: "/api/placeholder/40/40" },
+    { id: 13, name: "pro3", coins: 96.2, avatar: "/api/placeholder/40/40" },
+    { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
+    { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
+  ],
+  7: [
+    { id: 11, name: "pro1", coins: 98.7, avatar: "/api/placeholder/40/40" },
+    { id: 12, name: "pro2", coins: 97.5, avatar: "/api/placeholder/40/40" },
+    { id: 13, name: "pro3", coins: 96.2, avatar: "/api/placeholder/40/40" },
+    { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
+    { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
+  ], 
+  8: [
+    { id: 11, name: "pro1", coins: 98.7, avatar: "/api/placeholder/40/40" },
+    { id: 12, name: "pro2", coins: 97.5, avatar: "/api/placeholder/40/40" },
+    { id: 13, name: "pro3", coins: 96.2, avatar: "/api/placeholder/40/40" },
+    { id: 14, name: "pro4", coins: 95.8, avatar: "/api/placeholder/40/40" },
+    { id: 15, name: "pro5", coins: 94.6, avatar: "/api/placeholder/40/40" },
+  ],
 };
 

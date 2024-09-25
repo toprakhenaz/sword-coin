@@ -1,26 +1,9 @@
-// components/Card.tsx
-
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoins } from "@fortawesome/free-solid-svg-icons";
-
-interface CardData {
-  id: number;
-  name: string;
-  image: string;
-  hourlyIncome: number;
-  level: number;
-  upgradeCost: number;
-}
+import { icons } from "@/icons";
+import { CardProps } from "@/types";
 
 
-// Card veri tipini belirliyoruz
-interface CardProps {
-  card: CardData;
-  onUpgrade: (id: number) => void; // Yükseltme fonksiyonu
-}
-
-const Card: React.FC<CardProps> = ({ card, onUpgrade }) => {
+export default function Card ({ card, onUpgrade } : CardProps) {
   return (
     <div className="bg-gray-800 rounded-lg p-3 relative flex flex-col justify-between">
       <div>
@@ -31,7 +14,7 @@ const Card: React.FC<CardProps> = ({ card, onUpgrade }) => {
         />
         <div className="text-center font-semibold text-sm sm:text-base mb-1">{card.name}</div>
         <div className="text-center text-sm sm:text-base text-yellow-300 font-semibold">
-          <FontAwesomeIcon icon={faCoins} className="text-yellow-400 mr-1" /> +{card.hourlyIncome}/Saat
+          <FontAwesomeIcon icon={icons.coins} className="text-yellow-400 mr-1" /> +{card.hourlyIncome}/Saat
         </div>
         <div className="mt-2 text-center">
           <span className="text-s sm:text-sm text-gray-400">Seviye {card.level}</span>
@@ -42,11 +25,9 @@ const Card: React.FC<CardProps> = ({ card, onUpgrade }) => {
         className={`mt-2 
           bg-green-600 text-white rounded-full py-1 px-2 text-xs sm:text-sm flex items-center justify-center hover:bg-green-500 transition-colors duration-300`}
       >
-        <FontAwesomeIcon icon={faCoins} className="ml-1 mr-1 text-lg" /> 
+        <FontAwesomeIcon icon={icons.coins} className="ml-1 mr-1 text-lg" /> 
         <span className="text-lg ml-1">{card.upgradeCost}</span>
       </button>
     </div>
   );
 };
-
-export default Card;

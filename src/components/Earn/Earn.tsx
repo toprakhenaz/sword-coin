@@ -2,43 +2,13 @@
 
 import React, { useState, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins, faClock, faGift, faExternalLinkAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../Navbar';
+import { Alert , AlertDescription, AlertTitle } from './Alert';
+import { icons } from '@/icons';
+import { Progress } from './Progress';
+import { Card, CardContent} from './EarnCard';
+import HeaderCard from '../HeaderCard';
 
-
-
-interface AlertProps {
-  children: React.ReactNode;
-}
-
-export const Alert: React.FC<AlertProps> = ({ children }) => (
-  <div className="bg-red-500 text-white p-4 rounded mb-4">
-    {children}
-  </div>
-);
-
-export const AlertTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h3 className="font-bold">{children}</h3>
-);
-
-export const AlertDescription: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p>{children}</p>
-);
-
-
-interface ProgressProps {
-  value: number;
-  className?: string;
-}
-
-export const Progress: React.FC<ProgressProps> = ({ value, className }) => (
-  <div className={`w-full bg-gray-200 rounded-full h-2.5 ${className}`}>
-    <div 
-      className="bg-blue-600 h-2.5 rounded-full" 
-      style={{ width: `${value}%` }}
-    ></div>
-  </div>
-);
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
@@ -51,31 +21,6 @@ export const Button: React.FC<ButtonProps> = ({ className, children, ...props })
   </button>
 );
 
-interface CardProps {
-  className?: string;
-  children: ReactNode;
-}
-
-export const Card: React.FC<CardProps> = ({ className, children }) => (
-  <div className={`rounded-lg shadow-md ${className}`}>{children}</div>
-);
-
-interface CardHeaderProps {
-  children: ReactNode;
-}
-
-export const CardHeader: React.FC<CardHeaderProps> = ({ children }) => (
-  <div className="px-4 py-5 border-b border-gray-200 sm:px-6">{children}</div>
-);
-
-interface CardContentProps {
-  className?: string;
-  children: ReactNode;
-}
-
-export const CardContent: React.FC<CardContentProps> = ({ className, children }) => (
-  <div className={`p-4 ${className}`}>{children}</div>
-);
 
 interface User {
   coins: number;
@@ -111,7 +56,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       <div className="bg-gray-800 rounded-lg p-6 max-w-sm w-full">
         <div className="flex justify-end">
           <button onClick={onClose} className="text-gray-400 hover:text-white">
-            <FontAwesomeIcon icon={faTimes} />
+            <FontAwesomeIcon icon={icons.times} />
           </button>
         </div>
         {children}
@@ -171,20 +116,7 @@ const Earn: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white p-4 mx-auto min-h-screen">
-      <Card className="bg-gray-800 mb-4">
-        <CardContent className="p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <FontAwesomeIcon icon={faCoins} className="text-yellow-400 mr-2 text-2xl" />
-              <span className="text-2xl font-bold">{user.coins}</span>
-            </div>
-            <div className="flex items-center text-yellow-300">
-              <FontAwesomeIcon icon={faClock} className="mr-1" />
-              <span className="font-semibold text-xl">{user.hourlyEarn}/h</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <HeaderCard coins={user.coins} hourlyEarn={user.hourlyEarn} />
 
       <Card className="bg-gradient-to-r from-yellow-600 to-yellow-800 mb-4">
         <CardContent className="p-4">
@@ -197,7 +129,7 @@ const Earn: React.FC = () => {
               onClick={() => setModalOpen(true)}
               className="bg-yellow-500 hover:bg-yellow-600 text-black"
             >
-              <FontAwesomeIcon icon={faGift} className="mr-2" />
+              <FontAwesomeIcon icon={icons.gift} className="mr-2" />
               Ödülü Al
             </Button>
           </div>
@@ -219,7 +151,7 @@ const Earn: React.FC = () => {
                   onClick={() => handleSpecialOffer(offer)}
                   className="bg-blue-500 hover:bg-blue-600"
                 >
-                  <FontAwesomeIcon icon={faExternalLinkAlt} className="mr-2" />
+                  <FontAwesomeIcon icon={icons.externalLinkAlt} className="mr-2" />
                   Git
                 </Button>
               </div>

@@ -1,0 +1,34 @@
+import { NextResponse } from 'next/server';
+import { db } from '@/db'; 
+
+export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+
+    // Use Prisma to save the user data
+    const updatedUser = await db.user.update({
+      where: { id: body.id },
+      data: {
+        userName: body.userName,
+        userImage: body.userImage,
+        coins: body.coins,
+        energy: body.energy,
+        energyMax: body.energyMax,
+        league: body.league,
+        coinsHourly: body.coinsHourly,
+        coinsPerTap: body.coinsPerTap,
+        lastBoostTime: body.lastBoostTime,
+        dailyBoostCount: body.dailyBoostCount,
+        foundCards: body.foundCards,
+      },
+    });
+    console.log(updatedUser);
+    return NextResponse.json(updatedUser);
+
+  } catch (error) {
+    console.log("Başaramadık abi")
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+  }
+}
