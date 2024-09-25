@@ -25,15 +25,18 @@ model Refferance {
 }
 
 model User {
-  id               Int           @id @default(autoincrement())
-  userName         String
-  energy           Int
-  maxEnergy        Int
-  coins            Int
-  hourlyEarning    Int
-  userLig          Int
-  isBoosted        Boolean
-  boostMinute      Int
-  cards            UserCardData[]
-  refferances      Refferance[]
+  id             Int      @id @default(autoincrement())
+  userName       String
+  userImage      String?  // Kullanıcı resmi opsiyonel olabilir
+  coins          Int
+  energy         Int
+  energyMax      Int
+  league         Int
+  coinsHourly    Int
+  coinsPerTap    Int
+  lastBoostTime  DateTime
+  dailyBoostCount Int
+  foundCards     String    // String olarak dizi saklanıyor
+  cards          UserCardData[]    // Card modeliyle ilişki
+  refferances    Refferance[]  // Refferance modeliyle ilişki
 }
