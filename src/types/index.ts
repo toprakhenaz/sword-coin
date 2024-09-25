@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { User } from "@prisma/client";
 
 export interface CentralButtonProps {
   onClick: () => void; 
@@ -84,6 +85,11 @@ export interface CardData {
   category: string;
 }
 
+interface UserCardData {
+  id: number;    
+  level: number; 
+}
+
 interface Refferance {
   Id: number;
   refferanceAmount: number;
@@ -91,3 +97,23 @@ interface Refferance {
   previousLig: number; 
 }
 
+export interface SUser {
+  userName: string;    
+  userId: number;  
+  coins: number;       
+  energy: number;      
+  maxEnergy: number;   
+  lig: number;          
+  hourlyEarn: number; 
+  earnPerTap: number;   
+  lastBoostTime: Date; 
+  dailyBoostCount: number; 
+  cards:  UserCardData[];  
+  dailyCombo: number[];
+  foundCards: number[];
+  refferances: Refferance[];  
+}
+
+export interface UserData {
+  user: User;
+}

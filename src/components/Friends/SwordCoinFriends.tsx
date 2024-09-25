@@ -2,15 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar';
 import HeaderCard from '../HeaderCard';
-import { User} from '@/types';
+import { SUser} from '@/types';
 import { Myusers } from '@/data/GeneralData';
 import Friends from './Friends';
 import RefferanceRow from './RefferanceRow';
 
 
 export default function Referral(){
-  const [users, setUsers] = useState<User[]>(Myusers);
-  const [currentUser, setCurrentUser] = useState<User>(users[1]); 
+  const [users, setUsers] = useState<SUser[]>(Myusers);
+  const [currentUser, setCurrentUser] = useState<SUser>(users[1]); 
 
   const checkReferralLevels = () => {
     if (!currentUser) return;
