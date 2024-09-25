@@ -1,3 +1,27 @@
+const date = new Date( 1684275200000);
+
+export const user = {
+  userName: 'ali',
+  userId: 2,
+  coins: 2000000000,
+  energy: 200,
+  maxEnergy: 500,
+  lig: 1,
+  hourlyEarn: 200,
+  earnPerTap: 3,
+  lastBoostTime: date, // or your specific date
+  dailyBoostCount: 3,
+  cards: [
+    { id: 1, level: 2 },
+    { id: 3, level: 1 },
+  ],
+  dailyCombo: [1, 5, 7], // Daily combo card IDs
+  foundCards: [], // Found card IDs
+  lastRewardDate: '', // Date of the last reward claim
+  rewardStreak: 0, // Current streak count
+  refferences : []
+};
+
 export const ligImage: Record<number | string, string> = {
   1: "/ligImages/wooden-sword.png",       // 1. Seviye: Ahşap Kılıç
   2: "/ligImages/bronze-sword.png",       // 2. Seviye: Bronz Kılıç
@@ -26,9 +50,6 @@ export const ligEearningCoin: Record<number, number> = {
   3: 600,
   4: 900,
 }
-
-const date = new Date( 1684275200000);
-
 
 
 export const useLeagueData = () => {

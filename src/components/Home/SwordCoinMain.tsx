@@ -22,8 +22,10 @@ export default function MainPage({ user: initialUser }: UserData) {
   const [showPopup, setShowPopup] = useState(false);
   const [showLeagueOverlay, setShowLeagueOverlay] = useState(false);
   const [boostMessage, setBoostMessage] = useState('');
-  const [earnTapPosition, setEarnTapPosition] = useState<{ top: number; left: number } | null>(null);
+  const [earnTapPositions, setEarnTapPositions] = useState<Array<{ id: string; top: number; left: number }>>([]);
   const userRef = useRef(Myuser);
+  const centralButtonRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     userRef.current = Myuser;
@@ -105,13 +107,29 @@ export default function MainPage({ user: initialUser }: UserData) {
     }
   };
 
+  const getRandomPosition = () => {
+    if (centralButtonRef.current) {
+      const buttonRect = centralButtonRef.current.getBoundingClientRect();
+      const horizontalOffset = (Math.random() - 0.5) * buttonRect.width; // Random horizontal offset within button width
+      const verticalOffset = Math.random() * 30 + 20; // Random vertical offset between 20 and 50 pixels above the button
+      
+      return {
+        left: buttonRect.left + buttonRect.width / 2 + horizontalOffset,
+        top: buttonRect.top - verticalOffset,
+      };
+    }
+    return { left: 0, top: 0 };
+  };
+
+ 
+
   const handleButtonClick = () => {
     if (Myuser.energy !== 0 && Myuser.energy >= Myuser.coinsPerTap) {
       setUser((prevUser) => {
         let newCoin = prevUser.coins + Myuser.coinsPerTap;
         let newLig = prevUser.league;
         let earnedCoin = 0;
-        let newCoinsPerTap = prevUser.coinsPerTap
+        let newCoinsPerTap = prevUser.coinsPerTap;
 
         if (ligCoin[prevUser.league + 1] && newCoin >= ligCoin[prevUser.league + 1]) {
           newLig = prevUser.league + 1;
@@ -123,28 +141,36 @@ export default function MainPage({ user: initialUser }: UserData) {
         if (navigator.vibrate) {
           navigator.vibrate(50);
         }
-        
+
+        const position = getRandomPosition();
+        setEarnTapPositions(prev => [...prev, { id: `${Date.now()}-${Math.random()}`, ...position }]);
 
         const updatedUser = {
           ...prevUser,
           energy: Math.max(prevUser.energy - Myuser.coinsPerTap, 0),
           coins: newCoin,
           league: newLig,
-          coinsPertap : newCoinsPerTap,
+          coinsPerTap: newCoinsPerTap,
         };
 
-        // Immediately save the updated user data
         if(newLig > prevUser.league){
           saveUserData(updatedUser);
         }
 
         return updatedUser;
-
       });
     }
-
   };
 
+  useEffect(() => {
+    earnTapPositions.forEach(position => {
+      const timer = setTimeout(() => {
+        setEarnTapPositions(prev => prev.filter(p => p.id !== position.id));
+      }, 300); // Remove after 1 second
+
+      return () => clearTimeout(timer);
+    });
+  }, [earnTapPositions]);
   const handleClosePopup = () => {
     setShowPopup(false);
     setBoostMessage('');
@@ -153,10 +179,26 @@ export default function MainPage({ user: initialUser }: UserData) {
 
 
   return (
-    <div className='min-h-screen flex flex-col text-white space-y-4 p-6 overflow-x-hidden'>
+    <div className='min-h-screen flex flex-col text-white space-y-6 p-6 overflow-x-hidden'>
       <Header hourlyEarn={Myuser.coinsHourly} coinsToLevelUp={ligCoin[Myuser.league + 1] ? ligCoin[Myuser.league + 1] : 0} earnPerTap={Myuser.coinsPerTap} />
       <CoinDisplay coins={Myuser.coins} league={Myuser.league} onclick={toggleLeagueOverlay} />
-      <CentralButton onClick={handleButtonClick} league={Myuser.league} />
+      <div ref={centralButtonRef} className="relative py-8">
+        <CentralButton onClick={handleButtonClick} league={Myuser.league} />
+        {earnTapPositions.map(position => (
+          <div 
+            key={position.id}
+            className="absolute text-xl z-50 animate-riseAndFade"
+            style={{
+              top: position.top,
+              left: position.left,
+              transform: 'translate(-50%, -50%)',
+              fontWeight : 'bolder',
+            }}
+          >
+            +{Myuser.coinsPerTap}
+          </div>
+        ))}
+      </div>
       <EnergyBar energy={Myuser.energy} maxEnergy={Myuser.energyMax} boost={handleBoost} />
       <Navbar />
 
@@ -186,20 +228,7 @@ export default function MainPage({ user: initialUser }: UserData) {
         />
       )}
 
-      {earnTapPosition && (
-        <div 
-          className="text-xl z-100"
-          style={{
-            top: earnTapPosition.top,
-            left: earnTapPosition.left,
-            transform: 'translate(-50%, -50%)',
-            transition: 'opacity 0.5s',
-            opacity: 1,
-          }}
-        >
-          +{Myuser.coinsPerTap}
-        </div>
-      )}
+     
     </div>
   );
 }

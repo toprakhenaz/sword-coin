@@ -27,8 +27,13 @@ export async function POST(req: Request) {
     console.log(updatedUser);
     return NextResponse.json(updatedUser);
 
-  } catch (error) {
-    console.log("Başaramadık abi")
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+  } catch (error: unknown) {  // Error type is unknown by default
+    if (error instanceof Error) {
+      console.log("Başaramadık abi", error.message);
+      return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+    } else {
+      console.log("Başaramadık abi, bilinmeyen hata:", error);
+      return NextResponse.json({ error: 'Unknown error occurred' }, { status: 500 });
+    }
   }
 }

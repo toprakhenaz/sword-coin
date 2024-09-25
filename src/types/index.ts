@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import { ReactNode } from "react";
 
 export interface CentralButtonProps {
