@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/db'; 
+import prisma from '@/db'; 
 
 export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
 
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // Use Prisma to save the user data
-    const updatedUser = await db.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: body.id },
       data: {
         userName: body.userName,

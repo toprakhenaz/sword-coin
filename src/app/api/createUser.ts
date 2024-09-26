@@ -1,5 +1,6 @@
+/*
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db';
+import prisma from '@/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -18,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         foundCards: '', // Diziyi string olarak sakla
       };
 
-      const newUser = await db.user.create({
+      const newUser = await prisma.user.create({
         data: {
           userName: user.userName,
           userImage: user.userImage,
@@ -31,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lastBoostTime: user.lastBoostTime,
           dailyBoostCount: user.dailyBoostCount,
           foundCards: user.foundCards,
+          lastRewardDate : `${Date.now()}`,
           cards: {
             create: []
           },
@@ -48,3 +50,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
+*/
+
+console.log('User created');
