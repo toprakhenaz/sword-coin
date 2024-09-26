@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { constants } from "buffer";
 
-let prisma : PrismaClient ;
+const prisma : PrismaClient = new PrismaClient();
 
-prisma = new PrismaClient();
 export default prisma;
