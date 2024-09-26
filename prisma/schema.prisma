@@ -41,6 +41,8 @@ model User {
   lastBoostTime  DateTime
   dailyBoostCount Int
   foundCards     String    // String olarak dizi saklanıyor
+  lastRewardDate String // Date of the last reward claim
+  rewardStreak Int // Current streak count
   cards          UserCardData[]    // Card modeliyle ilişki
   refferances    Refferance[]  // Refferance modeliyle ilişki
 }
