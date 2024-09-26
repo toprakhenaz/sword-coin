@@ -5,7 +5,6 @@ import { TimerBarProps } from '@/types';
 
 export default function TimerBar ({ dailyCombo, foundCards } :TimerBarProps) {
   const [timeLeft, setTimeLeft] = useState<number>(18377); // 5 saat 6 dakika 17 saniye
-  console.log("Rerendered timebar");
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeLeft((prevTime) => {

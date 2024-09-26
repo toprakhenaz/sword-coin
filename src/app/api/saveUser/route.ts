@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/db'; 
+import prisma from '../../../db';
+
 
 export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
 
@@ -27,7 +28,7 @@ export async function POST(req) {
     console.log(updatedUser);
     return NextResponse.json(updatedUser);
 
-  } catch (error) {  // Error type is unknown by default
+  } catch (error: unknown) {  // Error type is unknown by default
     if (error instanceof Error) {
       console.log("Başaramadık abi", error.message);
       return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });

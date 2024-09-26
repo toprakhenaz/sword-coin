@@ -21,7 +21,6 @@ export default async function Home() {
       where : { id : 1}
     })
  
-    console.log(user);
     if(!user) {
       return 'Not found';
     }

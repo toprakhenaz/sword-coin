@@ -7,26 +7,42 @@ import BottomNav from './BottomNav';
 import Navbar from '../Navbar';
 import ConfirmationPopup from './ConfirmationPopup';
 import Popup from '../Popup'; 
-import { user } from '@/data/GeneralData';
 import { Cards } from '@/data/cardData';
 import { CardData } from '@/types';
 import HeaderCard from '../HeaderCard';
+import { User } from '@prisma/client';
 
+interface UserType {
+  user : User & { cards: { cardId: number; level: number }[] } ;
+}
 
 const initialCards: CardData[] = Cards;
 
-const MainPage = () => {
-  console.log("Rerendered")
-  const [cards, setCards] = useState<CardData[]>(initialCards);
+const MainPage = ({user} : UserType) => {
+  console.log("user:" , user);
+
+  const userCards = initialCards.map((card) => {
+    const userCard = user.cards.find((userCard) => userCard.cardId === card.id);
+    return {
+      ...card,
+      level: userCard ? userCard.level : card.level,
+    };
+  });
+
+
+  const [cards, setCards] = useState<CardData[]>(userCards);
   const [coins, setCoins] = useState(user.coins);
-  const [hourlyEarn, setHourlyEarn] = useState(user.hourlyEarn);
+  const [hourlyEarn, setHourlyEarn] = useState(user.coinsHourly);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
-  const [foundCards, setFoundCards] = useState<number[]>(user.foundCards); // Bulunan kartlar
+  const [cardFounded , setCardsFounded] = useState(false);
+
+
+  const [foundCards, setFoundCards] = useState<number[]>(user.foundCards.split(',').map(Number)); // Bulunan kartlar
   const [activeCategory, setActiveCategory] = useState("Ekipman");
 
   // Günlük comboyu user'dan alıyoruz
-  const dailyCombo = user.dailyCombo;
+  const dailyCombo = [3,6,11];
   const calculateUpgradeCost = (level: number, oldCost: number) => {
     return Math.pow(2, level) * 50 + oldCost;
   };
@@ -60,6 +76,7 @@ const MainPage = () => {
             if (dailyCombo.includes(card.id) && !foundCards.includes(card.id)) {
               const updatedFoundCards = [...foundCards, card.id];
               setFoundCards(updatedFoundCards);
+              setCardsFounded(true);
             }
 
             return {
@@ -101,7 +118,7 @@ const MainPage = () => {
         />
       )}
 
-      {foundCards.length > 0 && (
+      {cardFounded && (
         <Popup
           title="Kart Bulundu!"
           message={`${cards.find((card) => card.id === foundCards[foundCards.length - 1])?.name} kartı günlük komboda bulundu!`}
