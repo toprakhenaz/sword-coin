@@ -1,11 +1,15 @@
-// schema.prisma
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your // schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db" 
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model UserCardData {
@@ -40,3 +44,4 @@ model User {
   cards          UserCardData[]    // Card modeliyle ilişki
   refferances    Refferance[]  // Refferance modeliyle ilişki
 }
+

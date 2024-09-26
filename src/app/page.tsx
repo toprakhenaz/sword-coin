@@ -1,5 +1,6 @@
 import MainPage from "@/components/Home/SwordCoinMain";
-import { db } from "@/db";
+import prisma from "@/db";
+
 //import axios from "axios";
 
 export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
@@ -17,7 +18,7 @@ export default async function Home() {
   };
   createUser();*/
 
-    const user = await db.user.findFirst ({
+    const user = await prisma.user.findFirst ({
       where : { id : 1}
     })
  
