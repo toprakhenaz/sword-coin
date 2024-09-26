@@ -1,6 +1,5 @@
 import MainPage from "@/components/Home/SwordCoinMain";
 import prisma from "@/db";
-
 //import axios from "axios";
 
 export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
