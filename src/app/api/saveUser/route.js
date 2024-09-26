@@ -3,7 +3,7 @@ import prisma from '@/db';
 
 export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
 
-export async function POST(req: Request) {
+export async function POST(req) {
   try {
     const body = await req.json();
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     console.log(updatedUser);
     return NextResponse.json(updatedUser);
 
-  } catch (error: unknown) {  // Error type is unknown by default
+  } catch (error) {  // Error type is unknown by default
     if (error instanceof Error) {
       console.log("Başaramadık abi", error.message);
       return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
