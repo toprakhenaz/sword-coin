@@ -25,7 +25,9 @@ interface UpgradeData {
   newUserCoins: number;
   newUserCoinsHourly: number;
   newFoundCards?: string;
+  newDailyCardsFound : boolean;
 }
+
 
 const initialCards: CardData[] = Cards;
 
@@ -57,23 +59,16 @@ const MainPage = ({ user }: UserType) => {
   const [foundCards, setFoundCards] = useState<number[]>(user.foundCards.split(',').map(Number)); 
   const [activeCategory, setActiveCategory] = useState("Ekipman");
   const [isloading, setIsloading] = useState(true);
-  const [allCardsFound, setAllCardsFound] = useState(false); // Tüm kartlar bulunduğunda ödül için
-
+  const [allCardsFound, setAllCardsFound] = useState(user.dailyCardRewardClaimed); 
+  const [dailyCardFoundPopup , setDailyCardFoundPopup] = useState(false);
   const dailyCombo = [1, 2, 4];
 
   useEffect(() => {
     setInterval(() => {
       setIsloading(false);
-    }, 2000);
+    }, 1000);
   });
 
-  useEffect(() => {
-    // Eğer tüm kartlar bulunduysa ve daha önce ödül verilmediyse 100.000 coin ver
-    if (dailyCombo.every(cardId => foundCards.includes(cardId)) && !allCardsFound) {
-      setCoins(prevCoins => prevCoins + 100000); // 100.000 coin ekle
-      setAllCardsFound(true); // Ödül bir kez verildiği için bu durumu güncelle
-    }
-  }, [foundCards]);
 
   const handleUpgradeClick = (card: CardData) => {
     if (coins >= card.upgradeCost) {
@@ -90,40 +85,53 @@ const MainPage = ({ user }: UserType) => {
       console.log('User data saved successfully', response.data);
     } catch (error) {
       console.error('Error saving card data:', error);
-    }
+    } 
   };
+
 
   const handleUpgradeConfirm = async () => {
     if (selectedCard) {
-      const newCoins = coins - selectedCard.upgradeCost;
+      let newCoins = coins - selectedCard.upgradeCost;
       const newLevel = selectedCard.level + 1;
       const newUpgradeCost = calculateUpgradeCost(newLevel, selectedCard.upgradeCost);
       const newHourlyIncome = calculateHourlyEarn(newLevel, selectedCard.hourlyIncome);
-      const newHourlyEarn = hourlyEarn + newHourlyIncome - selectedCard.hourlyIncome;
-
+      const newHourlyEarn = hourlyEarn + selectedCard.hourlyIncome;
+  
       let updatedFoundCards = [...foundCards];
+      let newAllCardsFound = allCardsFound;
+  
       if (dailyCombo.includes(selectedCard.id) && !foundCards.includes(selectedCard.id)) {
-        updatedFoundCards = [...foundCards, selectedCard.id];
+        updatedFoundCards = [...updatedFoundCards, selectedCard.id];
+        
+        // Check if all daily combo cards are found after this upgrade
+        if (dailyCombo.every(cardId => updatedFoundCards.includes(cardId)) && !allCardsFound) {
+          newCoins += 100000;
+          setDailyCardFoundPopup(true);
+          newAllCardsFound = true;
+        }
+        
         setFoundCards(updatedFoundCards);
         setCardFounded(true);
       }
-
+  
       const myCard = user.cards.find((userCard) => userCard.cardId === selectedCard.id);
-
+  
       const data: UpgradeData = {
         userId: user.id,
-        cardId: myCard ? myCard.id : selectedCard.id, // Eğer myCard varsa ID'sini al, yoksa 0
+        cardId: myCard ? myCard.id : selectedCard.id,
         newLevel: newLevel,
         newUserCoins: newCoins,
         newUserCoinsHourly: newHourlyEarn,
         newFoundCards: updatedFoundCards.join(','),
+        newDailyCardsFound: newAllCardsFound,
       };
-
-      await saveUserCardData(data); // Yeni data burada güncellenerek gönderiliyor
-
+  
+      await saveUserCardData(data);
+  
       setCoins(newCoins);
       setHourlyEarn(newHourlyEarn);
-
+      setAllCardsFound(newAllCardsFound);
+  
       setCards((prevCards) =>
         prevCards.map((card) =>
           card.id === selectedCard.id
@@ -167,6 +175,15 @@ const MainPage = ({ user }: UserType) => {
         />
       )}
 
+      {dailyCardFoundPopup && (
+        <Popup
+          title="Bütün Kartlar Bulundu!"
+          message={`Günlük komboyu tamamladınız ve 100.000 coin kazandınız!!`}
+          image={'/coins.png'}
+          onClose={() => setDailyCardFoundPopup(false)}
+        />
+      )}
+
       {cardFounded && (
         <Popup
           title="Kart Bulundu!"
@@ -175,6 +192,7 @@ const MainPage = ({ user }: UserType) => {
           onClose={() => setCardFounded(false)}
         />
       )}
+
     </div>
   );
 };

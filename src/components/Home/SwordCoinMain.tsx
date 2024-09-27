@@ -6,7 +6,7 @@ import CoinDisplay from '@/components/Home/CoinDisplay';
 import CentralButton from '@/components/Home/CentralButton';
 import EnergyBar from '@/components/Home/EnergyBar';
 import Navbar from '@/components/Navbar';
-import { ligCoin, ligImage, ligEearningCoin} from '@/data/GeneralData';
+import { ligCoin, ligImage, ligEearningCoin, saveUserData, calculateEarningsInterval} from '@/data/GeneralData';
 import Popup from '@/components/Popup'; 
 import LeagueOverlay from './LeagueOverlay';
 import { User } from '@prisma/client';
@@ -49,17 +49,7 @@ export default function MainPage({ user: initialUser }: UserData) {
     return () => clearInterval(saveInterval);
   }, []);
 
-  const saveUserData = async (user: User) => {
-    try {
-      const userToSave = {
-        ...user
-      };
-      const response = await axios.post('/api/saveUser', userToSave);
-      console.log('User data saved successfully', response.data);
-    } catch (error) {
-      console.error('Error saving user data:', error);
-    }
-  };
+
 
 
   const toggleLeagueOverlay = useCallback(() => {
@@ -82,16 +72,19 @@ export default function MainPage({ user: initialUser }: UserData) {
 
   // Saatlik Coin Kazanç Arttırımı
   useEffect(() => {
+    // Saatlik kazanca göre interval süresi ve kazanç miktarını hesapla
+    const { intervalDuration, earningsPerInterval } = calculateEarningsInterval(Myuser.coinsHourly);
+  
     const coinInterval = setInterval(() => {
       setUser((prevUser) => ({
         ...prevUser,
-        coins: prevUser.coins + Math.floor(prevUser.coinsHourly / 120),
+        coins: prevUser.coins + earningsPerInterval,
       }));
-    }, 30000);
-
+    }, intervalDuration);
+  
     return () => clearInterval(coinInterval);
-  }, []);
-
+  }, [Myuser.coinsHourly]);
+  
   
   // Boost işlevi
   const handleBoost = () => {
@@ -138,12 +131,14 @@ export default function MainPage({ user: initialUser }: UserData) {
         let newLig = prevUser.league;
         let earnedCoin = 0;
         let newCoinsPerTap = prevUser.coinsPerTap;
+        let newMaxEnergy = prevUser.energyMax
 
         if (ligCoin[prevUser.league + 1] && newCoin >= ligCoin[prevUser.league + 1]) {
           newLig = prevUser.league + 1;
           earnedCoin = ligEearningCoin[newLig];
           newCoin = newCoin + earnedCoin;
           newCoinsPerTap = newCoinsPerTap + 1;
+          newMaxEnergy =  prevUser.energyMax + prevUser.league * 200;
           setShowPopup(true); 
         }
         if (navigator.vibrate) {
@@ -156,6 +151,7 @@ export default function MainPage({ user: initialUser }: UserData) {
         const updatedUser = {
           ...prevUser,
           energy: Math.max(prevUser.energy - Myuser.coinsPerTap, 0),
+          energyMax : newMaxEnergy,
           coins: newCoin,
           league: newLig,
           coinsPerTap: newCoinsPerTap,

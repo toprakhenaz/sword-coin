@@ -1,3 +1,6 @@
+import { User } from "@prisma/client";
+import axios from "axios";
+
 const date = new Date( 1684275200000);
 
 export const user = {
@@ -49,6 +52,10 @@ export const ligEearningCoin: Record<number, number> = {
   2: 300,
   3: 600,
   4: 900,
+  5 : 12000,
+  6 : 24000,
+  7 : 48000,
+  8 : 100000,
 }
 
 
@@ -148,3 +155,37 @@ export const Myusers = [
     ],
   },
 ]
+
+export const calculateEarningsInterval = (hourlyEarn : number) => {
+  let intervalDuration; 
+  let earningsPerInterval; 
+
+  if (hourlyEarn >= 9000) {
+    intervalDuration = 3000; 
+    earningsPerInterval = Math.floor(hourlyEarn / 1200); 
+  } else if (hourlyEarn >= 5000) {
+    intervalDuration = 5000;
+    earningsPerInterval = Math.floor(hourlyEarn / 720); 
+  } else if (hourlyEarn >= 1000) {
+    intervalDuration = 10000; 
+    earningsPerInterval = Math.floor(hourlyEarn / 360);  
+  } else {
+    intervalDuration = 30000; 
+    earningsPerInterval = Math.floor(hourlyEarn / 120);  
+  }
+
+  return { intervalDuration, earningsPerInterval };
+};
+
+export const saveUserData = async (user: User) => {
+  try {
+    const userToSave = {
+      ...user
+    };
+    const response = await axios.post('/api/saveUser', userToSave);
+    console.log('User data saved successfully', response.data);
+  } catch (error) {
+    console.error('Error saving user data:', error);
+  }
+};
+

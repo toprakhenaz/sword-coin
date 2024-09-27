@@ -1,6 +1,8 @@
 import MainPage from "@/components/Mine/SwordCoinMine"
 import prisma from "@/db";
 
+export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
+
 
 export default async function Mine(){
   const data = await prisma.user.findUnique({

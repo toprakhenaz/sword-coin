@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { userId, cardId, newLevel, newUserCoins, newUserCoinsHourly, newFoundCards } = await request.json();
+    const { userId, cardId, newLevel, newUserCoins, newUserCoinsHourly, newFoundCards, newDailyCardsFound } = await request.json();
 
     // userId kontrolü
     if (!userId) {
@@ -40,6 +40,7 @@ export async function POST(request: Request) {
         coins: newUserCoins,
         coinsHourly: newUserCoinsHourly,
         foundCards: newFoundCards,
+        dailyCardRewardClaimed : newDailyCardsFound,
       },
     });
 
