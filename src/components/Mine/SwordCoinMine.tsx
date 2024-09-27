@@ -11,7 +11,6 @@ import { Cards } from '@/data/cardData';
 import { CardData } from '@/types';
 import HeaderCard from '../HeaderCard';
 import { User } from '@prisma/client';
-import { saveUpgrade, updateFoundCards } from '@/actions';
 
 interface UserType {
   user : User & { cards: { cardId: number; level: number }[] } ;
