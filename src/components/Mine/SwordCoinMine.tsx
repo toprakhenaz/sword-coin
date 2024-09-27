@@ -61,13 +61,29 @@ const MainPage = ({ user }: UserType) => {
   const [isloading, setIsloading] = useState(true);
   const [allCardsFound, setAllCardsFound] = useState(user.dailyCardRewardClaimed); 
   const [dailyCardFoundPopup , setDailyCardFoundPopup] = useState(false);
-  const dailyCombo = [1, 2, 4];
+  const [dailyCombo, setDailyCombo] = useState<number[]>([]);
+
 
   useEffect(() => {
     setInterval(() => {
       setIsloading(false);
     }, 1000);
   });
+
+  useEffect(() => {
+    const fetchDailyCombo = async () => {
+      try {
+        const response = await axios.get('/api/daily-combo');
+        
+        setDailyCombo(response.data.cards.split(',').map(Number));
+        console.log(response.data.cards);
+      } catch (error) {
+        console.error('Error fetching daily combo:', error);
+      }
+    };
+
+    fetchDailyCombo();
+  }, []);
 
 
   const handleUpgradeClick = (card: CardData) => {

@@ -1,9 +1,9 @@
 export const Cards = [
   // Ekipmanlar
   { id: 1, name: "Abyssal Hammer", image: "/card-images/equipment/abyssal-hammer.png", hourlyIncome: 150, level: 0, upgradeCost: 1000, category: "Ekipman" },
-  { id: 2, name: "Celestial Shield", image: "/card-images/equipment/celestial-shield.png", hourlyIncome: 200, level: 0, upgradeCost: 10, category: "Ekipman" },
+  { id: 2, name: "Celestial Shield", image: "/card-images/equipment/celestial-shield.png", hourlyIncome: 200, level: 0, upgradeCost: 1500, category: "Ekipman" },
   { id: 3, name: "Void Reaver", image: "/card-images/equipment/void-reaver.png", hourlyIncome: 250, level: 0, upgradeCost: 2000, category: "Ekipman" },
-  { id: 4, name: "Starlight Gauntlet", image: "/card-images/equipment/starlight-gauntlet.png", hourlyIncome: 300, level: 0, upgradeCost: 15, category: "Ekipman" },
+  { id: 4, name: "Starlight Gauntlet", image: "/card-images/equipment/starlight-gauntlet.png", hourlyIncome: 300, level: 0, upgradeCost: 2500, category: "Ekipman" },
 
   // Özel Kartlar (Rank Bazlı)
   { id: 5, name: "S-Class Legend", image: "/card-images/special/s-rank.png", hourlyIncome: 5000, level: 0, upgradeCost: 100000, category: "Özel" },
