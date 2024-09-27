@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import { UserCardData } from "@prisma/client";
+import { User, UserCardData } from "@prisma/client";
 
 export async function updateCardLevel(userId: number, cardId: number, newLevel: number): Promise<UserCardData> {
   return prisma.userCardData.update({
@@ -15,16 +15,16 @@ export async function updateCardLevel(userId: number, cardId: number, newLevel: 
   });
 }
 
-
-/*
-export async function getUserWithCards(userId){
-  return prisma.user.findUnique({
+export async function updateFoundCards(userId: number, foundCards: number[]): Promise<User> {
+  return prisma.user.update({
     where: { id: userId },
-    include: { cards: true },
+    data: { 
+      foundCards: foundCards.join(','),
+    },
   });
 }
 
-export async function updateUserCoins(userId: string, newCoins: number, newCoinsHourly: number){
+export async function updateUserCoins(userId: number, newCoins: number, newCoinsHourly: number): Promise<User> {
   return prisma.user.update({
     where: { id: userId },
     data: { 
@@ -34,31 +34,39 @@ export async function updateUserCoins(userId: string, newCoins: number, newCoins
   });
 }
 
-export async function updateCardLevel(userId: string, cardId: number, newLevel: number): Promise<Card> {
-  return prisma.card.update({
-    where: { 
-      id: cardId,
-      userId: userId,
-    },
-    data: {
-      level: newLevel,
-    },
-  });
-}
-
-export async function updateFoundCards(userId: string, foundCards: number[]): Promise<User> {
-  return prisma.user.update({
-    where: { id: userId },
-    data: { 
-      foundCards: foundCards.join(','),
-    },
-  });
-}
-
-export async function saveUpgrade(userId: string, cardId: number, newLevel: number, newUpgradeCost: number, newHourlyIncome: number, newUserCoins: number, newUserCoinsHourly: number): Promise<void> {
+export async function saveUpgrade(userId: number, cardId: number, newLevel: number, newUserCoins: number, newUserCoinsHourly: number): Promise<void> {
   await prisma.$transaction([
-    updateCardLevel(userId, cardId, newLevel, newUpgradeCost, newHourlyIncome),
-    updateUserCoins(userId, newUserCoins, newUserCoinsHourly),
+    prisma.userCardData.update({
+      where: {
+        userId_cardId: {
+          userId: userId,
+          cardId: cardId,
+        },
+      },
+      data: {
+        level: newLevel,
+      },
+    }),
+    prisma.user.update({
+      where: { id: userId },
+      data: {
+        coins: newUserCoins,
+        coinsHourly: newUserCoinsHourly,
+      },
+    }),
   ]);
 }
+
+/*
+export async function getUserWithCards(userId){
+  return prisma.user.findUnique({
+    where: { id: userId },
+    include: { cards: true },
+  });
+}
+
+
+
+
+
 */

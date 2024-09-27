@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { icons } from '@/icons';
 import { TimerBarProps } from '@/types';
+import { getCardImage } from '@/data/cardData';
 
 export default function TimerBar ({ dailyCombo, foundCards } :TimerBarProps) {
   const [timeLeft, setTimeLeft] = useState<number>(18377); // 5 saat 6 dakika 17 saniye
@@ -47,7 +48,7 @@ export default function TimerBar ({ dailyCombo, foundCards } :TimerBarProps) {
         {dailyCombo.map((cardId) => (
           <div key={cardId} className="bg-gray-800 rounded-lg p-6 flex items-center justify-center">
             {foundCards.includes(cardId) ? (
-              <img src={`/images/cards/${cardId}.png`} alt={`Card ${cardId}`} className="w-full h-auto" />
+              <img src={getCardImage(cardId)} alt={`Card ${cardId}`} className="w-full h-auto" />
             ) : (
               <FontAwesomeIcon icon={icons.question} className="text-6xl text-yellow-400" />
             )}

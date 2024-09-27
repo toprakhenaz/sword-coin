@@ -21,3 +21,42 @@ export const Cards = [
   { id: 15, name: "G-Class Worker", image: "/card-images/workers/g-rank.png", hourlyIncome: 800, level: 0, upgradeCost: 11000, category: "İşçiler" },
   { id: 16, name: "H-Class Worker", image: "/card-images/workers/h-rank.png", hourlyIncome: 700, level: 0, upgradeCost: 9000, category: "İşçiler" },
 ];
+
+const cardImages: Record<number | string, string> = {
+  // Ekipmanlar
+  1: "/card-images/equipment/abyssal-hammer.png",  // Abyssal Hammer
+  2: "/card-images/equipment/celestial-shield.png",  // Celestial Shield
+  3: "/card-images/equipment/void-reaver.png",  // Void Reaver
+  4: "/card-images/equipment/starlight-gauntlet.png",  // Starlight Gauntlet
+  
+  // Özel Kartlar
+  5: "/card-images/special/s-rank.png",  // S-Class Legend
+  6: "/card-images/special/a-rank.png",  // A-Class Hero
+  7: "/card-images/special/b-rank.png",  // B-Class Champion
+  8: "/card-images/special/c-rank.png",  // C-Class Warrior
+  9: "/card-images/special/f-rank-2.png",  // Prime Artisan
+  10: "/card-images/special/woman-s-rank.png",  // Lady of the S-Rank
+  11: "/card-images/special/silver-woman.png",  // Silver Valkyrie
+  12: "/card-images/special/silver-woman-s-rank.png",  // S-Rank Valkyrie
+  
+  // İşçiler
+  13: "/card-images/workers/e-rank.png",  // E-Class Worker
+  14: "/card-images/workers/f-rank.png",  // F-Class Worker
+  15: "/card-images/workers/g-rank.png",  // G-Class Worker
+  16: "/card-images/workers/h-rank.png",  // H-Class Worker
+
+  // Kılıçlar (Seviye Bazlı)
+  "bronze": "/ligImages/bronze-sword.png",        // 2. Seviye: Bronz Kılıç
+  "iron": "/ligImages/iron-sword.png",            // 3. Seviye: Demir Kılıç
+  "steel": "/ligImages/steel-sword.png",          // 4. Seviye: Çelik Kılıç
+  "mithril": "/ligImages/adamantite-sword.png",   // 5. Seviye: Mithril Kılıç
+  "adamantite": "/ligImages/adamantite-sword.png",// 6. Seviye: Adamantit Kılıç
+  "dragon": "/ligImages/dragon-sword.png",        // 7. Seviye: Ejderha Kılıcı
+  "legendary": "/ligImages/legendary-sword.png",  // 8. Seviye: Efsanevi Kılıç
+};
+
+// Ekstra fonksiyonlar veya işlemler burada yapılabilir, örneğin:
+// Kılıç resmini id'ye göre almak
+export function getCardImage(cardId: number): string {
+  return cardImages[cardId] || "/default-image.png";  // Eğer bir resim yoksa varsayılan resim
+}

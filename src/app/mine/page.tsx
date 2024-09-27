@@ -3,11 +3,18 @@ import prisma from "@/db";
 
 
 export default async function Mine(){
-    const data = await prisma.user.findUnique({
-      where: { id: 1 },
-      include: { cards: true },
-    });
-
+  const data = await prisma.user.findUnique({
+    where: { id: 1 }, // Kullanıcının ID'sine göre sorgulama yapıyoruz
+    include: {
+      cards: {
+        select: {
+          cardId: true,
+          level: true,
+        },
+      }
+    },
+  });
+  
     if(!data) {
       return 'Not found';
     }
