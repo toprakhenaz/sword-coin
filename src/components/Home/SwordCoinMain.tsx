@@ -10,7 +10,6 @@ import { ligCoin, ligImage, ligEearningCoin, saveUserData, calculateEarningsInte
 import Popup from '@/components/Popup'; 
 import LeagueOverlay from './LeagueOverlay';
 import { User } from '@prisma/client';
-import axios from 'axios';
 import SkeletonLoading from '@/app/skeleton/SkeletonMain';
 
 export interface UserData {
