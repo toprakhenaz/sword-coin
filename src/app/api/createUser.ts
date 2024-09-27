@@ -50,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
-*/
+
 
 console.log('User created');
+*/

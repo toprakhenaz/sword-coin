@@ -65,41 +65,46 @@ const MainPage = ({user} : UserType) => {
       const newCoins = coins - selectedCard.upgradeCost;
       const newHourlyEarn = hourlyEarn + selectedCard.hourlyIncome;
   
-      setCoins(newCoins);
-      setHourlyEarn(newHourlyEarn);
+      // API route'a veri gönder
+      const response = await fetch("api/upgradeCard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          cardId: selectedCard.id,
+          newLevel: selectedCard.level + 1,
+          newUserCoins: newCoins,
+          newUserCoinsHourly: newHourlyEarn,
+        }),
+      });
   
-      setCards((prevCards) =>
-        prevCards.map((card) => {
-          if (card.id === selectedCard.id) {
-            const newLevel = card.level + 1;
-            const newUpgradeCost = calculateUpgradeCost(newLevel, card.upgradeCost);
-            const newHourlyIncome = calculateHourlyEarn(newLevel, card.hourlyIncome);
+      if (response.ok) {
+        // Güncelleme işlemi başarılıysa state'i güncelle
+        setCoins(newCoins);
+        setHourlyEarn(newHourlyEarn);
   
-            // Kart günlük combo içinde mi kontrol ediliyor ve bulunmuş kartlara ekleniyor
-            if (dailyCombo.includes(card.id) && !foundCards.includes(card.id)) {
-              const updatedFoundCards = [...foundCards, card.id];
-              setFoundCards(updatedFoundCards);
-              setCardFounded(true);
-              // Güncellenen foundCards'ı veritabanına kaydediyoruz
-              updateFoundCards(user.id, updatedFoundCards);
-            }
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.id === selectedCard.id
+              ? {
+                  ...card,
+                  level: card.level + 1,
+                  upgradeCost: calculateUpgradeCost(card.level + 1, card.upgradeCost),
+                  hourlyIncome: calculateHourlyEarn(card.level + 1, card.hourlyIncome),
+                }
+              : card
+          )
+        );
+      } else {
+        console.error("Kart yükseltme işlemi başarısız oldu.");
+      }
   
-            // Veritabanında kart seviyesini güncelleme işlemi
-            saveUpgrade(user.id, card.id, newLevel, newCoins, newHourlyEarn);
-  
-            return {
-              ...card,
-              level: newLevel,
-              hourlyIncome: newHourlyIncome,
-              upgradeCost: newUpgradeCost,
-            };
-          }
-          return card;
-        })
-      );
+      setShowPopup(false);
     }
-    setShowPopup(false);
   };
+  
   
 
   const filteredCards = cards.filter(card => card.category === activeCategory);
