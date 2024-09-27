@@ -1,35 +1,55 @@
 import prisma from "@/db";
 import { NextResponse } from "next/server";
 
-// POST /api/upgradeCard
 export async function POST(request: Request) {
   try {
-    const { userId, cardId, newLevel, newUserCoins, newUserCoinsHourly, foundCards } = await request.json();
+    const { userId, cardId, newLevel, newUserCoins, newUserCoinsHourly, newFoundCards } = await request.json();
 
-    // Kart seviyesini güncelle
-    await prisma.userCardData.update({
+    // userId kontrolü
+    if (!userId) {
+      return NextResponse.json({ error: "User ID eksik!" }, { status: 400 });
+    }
+
+    // Kullanıcının kart verilerini al
+    const existingUserCard = await prisma.userCardData.findFirst({
       where: {
-        userId_cardId: {
-          userId: userId,
-          cardId: cardId,
-        },
+        userId: userId,
+        cardId: cardId,
       },
-      data: { level: newLevel },
     });
 
-    // Kullanıcının coins ve saatlik kazançlarını güncelle
-    await prisma.user.update({
+    // Kart seviyesini güncelle ya da yeni bir kart oluştur
+    const userCardUpdate = await prisma.userCardData.upsert({
+      where: {
+        id: existingUserCard?.id ?? 0, // Eğer kart yoksa 0 kullan
+      },
+      create: {
+        userId: userId,
+        cardId: cardId,
+        level: newLevel,
+      },
+      update: {
+        level: newLevel,
+      },
+    });
+
+    // Kullanıcının coins, saatlik kazançlarını ve bulunan kartlarını güncelle
+    const userUpdate = await prisma.user.update({
       where: { id: userId },
       data: {
         coins: newUserCoins,
         coinsHourly: newUserCoinsHourly,
-        foundCards : foundCards,
+        foundCards: newFoundCards,
       },
     });
 
-    return NextResponse.json({ message: "Kart başarıyla yükseltildi!" });
+    return NextResponse.json({ 
+      message: "Kart başarıyla güncellendi!",
+      userCardUpdate,
+      userUpdate
+    });
   } catch (error) {
-    console.error("Kart yükseltme hatası:", error);
+    console.error("Kart güncelleme hatası:", error);
     return NextResponse.json({ error: "Bir şeyler yanlış gitti!" }, { status: 500 });
   }
 }

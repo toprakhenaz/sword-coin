@@ -42,10 +42,12 @@ model User {
   coinsPerTap    Int
   lastBoostTime  DateTime
   dailyBoostCount Int
-  foundCards     String    // String olarak dizi saklanıyor
-  lastRewardDate String // Date of the last reward claim
-  rewardStreak Int // Current streak count
-  cards          UserCardData[]    // Card modeliyle ilişki
-  refferances    Refferance[]  // Refferance modeliyle ilişki
+  dailyCardRewardClaimed Boolean @default(false)
+  foundCards     String    
+  dailyRewardDate DateTime @default(now()) 
+  dailyRewardStreak Int @default(1)
+  dailyRewardClaimed Boolean @default(false)
+  cards          UserCardData[]    
+  refferances    Refferance[]  
 }
 

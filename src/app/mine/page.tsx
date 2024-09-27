@@ -8,8 +8,10 @@ export default async function Mine(){
     include: {
       cards: {
         select: {
+          id : true,
           cardId: true,
           level: true,
+          userId: true,
         },
       }
     },

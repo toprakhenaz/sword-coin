@@ -3,7 +3,8 @@ import { icons } from "@/icons";
 import { CardProps } from "@/types";
 
 
-export default function Card ({ card, onUpgrade } : CardProps) {
+export default function Card ({ card, onUpgrade , coins} : CardProps) {
+  const isDisabled = coins < card.upgradeCost; 
   return (
     <div className="bg-gray-800 rounded-lg p-3 relative flex flex-col justify-between">
       <div>
@@ -23,7 +24,8 @@ export default function Card ({ card, onUpgrade } : CardProps) {
       <button
         onClick={() => onUpgrade(card.id)}
         className={`mt-2 
-          bg-green-600 text-white rounded-full py-1 px-2 text-xs sm:text-sm flex items-center justify-center hover:bg-green-500 transition-colors duration-300`}
+          upgrade-button ${isDisabled ? 'bg-gray-600 hover:bg-gray-500' : 'bg-green-600 hover:bg-green-500'} text-white rounded-full py-1 px-2 text-xs sm:text-sm flex items-center justify-center  transition-colors duration-300 ` }
+        disabled = {isDisabled}
       >
         <FontAwesomeIcon icon={icons.coins} className="ml-1 mr-1 text-lg" /> 
         <span className="text-lg ml-1">{card.upgradeCost}</span>

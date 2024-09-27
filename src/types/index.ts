@@ -37,6 +37,7 @@ export interface BottomNavProps {
 export interface CardProps {
   card: CardData;
   onUpgrade: (id: number) => void;
+  coins : number;
 }
 
 export interface ConfirmationPopupProps {

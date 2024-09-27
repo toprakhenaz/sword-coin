@@ -11,6 +11,7 @@ import Popup from '@/components/Popup';
 import LeagueOverlay from './LeagueOverlay';
 import { User } from '@prisma/client';
 import axios from 'axios';
+import SkeletonLoading from '@/app/skeleton/SkeletonMain';
 
 export interface UserData {
   user: User;
@@ -25,7 +26,14 @@ export default function MainPage({ user: initialUser }: UserData) {
   const [earnTapPositions, setEarnTapPositions] = useState<Array<{ id: string; top: number; left: number }>>([]);
   const userRef = useRef(Myuser);
   const centralButtonRef = useRef<HTMLDivElement>(null);
+  const [isloading , setIsloading] = useState(true);
 
+  useEffect(() => {
+    setInterval(() => {
+      setIsloading(false);
+    }, 3000);
+
+  });
 
   useEffect(() => {
     userRef.current = Myuser;
@@ -67,7 +75,7 @@ export default function MainPage({ user: initialUser }: UserData) {
         }
         return prevUser;
       });
-    }, 1000);
+    }, Math.floor(1000 /Myuser.league));
     
     return () => clearInterval(interval);
   }, []);
@@ -178,7 +186,9 @@ export default function MainPage({ user: initialUser }: UserData) {
 
 
 
-  return (
+  return isloading ? (
+    <SkeletonLoading />
+  ) : (
     <div className='min-h-screen flex flex-col text-white space-y-6 p-6 overflow-x-hidden'>
       <Header hourlyEarn={Myuser.coinsHourly} coinsToLevelUp={ligCoin[Myuser.league + 1] ? ligCoin[Myuser.league + 1] : 0} earnPerTap={Myuser.coinsPerTap} />
       <CoinDisplay coins={Myuser.coins} league={Myuser.league} onclick={toggleLeagueOverlay} />
