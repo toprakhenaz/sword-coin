@@ -11,10 +11,23 @@ import { Cards } from '@/data/cardData';
 import { CardData } from '@/types';
 import HeaderCard from '../HeaderCard';
 import { User } from '@prisma/client';
+import axios from 'axios';
+
 
 interface UserType {
   user : User & { cards: { cardId: number; level: number }[] } ;
 }
+
+interface UpgradeData {
+  userId: number;
+  cardId: number;
+  newLevel: number;
+  newUserCoins: number;
+  newUserCoinsHourly: number;
+  newFoundCards?: string;
+}
+
+
 
 const initialCards: CardData[] = Cards;
 
@@ -58,52 +71,60 @@ const MainPage = ({user} : UserType) => {
       alert("Yeterli coininiz yok!");
     }
   };
-  
+
+  const saveUserCardData = async (data: UpgradeData) => {
+    try {
+      const response = await axios.post('/api/saveUser', data);
+      console.log('User data saved successfully', response.data);
+    } catch (error) {
+      console.error('Error saving card data:', error);
+    }
+  };
+
   const handleUpgradeConfirm = async () => {
     if (selectedCard) {
       const newCoins = coins - selectedCard.upgradeCost;
-      const newHourlyEarn = hourlyEarn + selectedCard.hourlyIncome;
-  
-      // API route'a veri gönder
-      const response = await fetch("api/upgradeCard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          cardId: selectedCard.id,
-          newLevel: selectedCard.level + 1,
-          newUserCoins: newCoins,
-          newUserCoinsHourly: newHourlyEarn,
-        }),
-      });
-  
-      if (response.ok) {
-        // Güncelleme işlemi başarılıysa state'i güncelle
-        setCoins(newCoins);
-        setHourlyEarn(newHourlyEarn);
-  
-        setCards((prevCards) =>
-          prevCards.map((card) =>
-            card.id === selectedCard.id
-              ? {
-                  ...card,
-                  level: card.level + 1,
-                  upgradeCost: calculateUpgradeCost(card.level + 1, card.upgradeCost),
-                  hourlyIncome: calculateHourlyEarn(card.level + 1, card.hourlyIncome),
-                }
-              : card
-          )
-        );
-      } else {
-        console.error("Kart yükseltme işlemi başarısız oldu.");
+      const newLevel = selectedCard.level + 1;
+      const newUpgradeCost = calculateUpgradeCost(newLevel, selectedCard.upgradeCost);
+      const newHourlyIncome = calculateHourlyEarn(newLevel, selectedCard.hourlyIncome);
+      const newHourlyEarn = hourlyEarn + newHourlyIncome - selectedCard.hourlyIncome;
+
+      let updatedFoundCards = [...foundCards];
+      if (dailyCombo.includes(selectedCard.id) && !foundCards.includes(selectedCard.id)) {
+        updatedFoundCards = [...foundCards, selectedCard.id];
+        setFoundCards(updatedFoundCards);
+        setCardFounded(true);
       }
-  
-      setShowPopup(false);
+
+      const data: UpgradeData = {
+        userId: user.id,
+        cardId: selectedCard.id,
+        newLevel: newLevel,
+        newUserCoins: newCoins,
+        newUserCoinsHourly: newHourlyEarn,
+        newFoundCards: updatedFoundCards.join(','),
+      };
+
+      await saveUserCardData(data);
+
+      setCoins(newCoins);
+      setHourlyEarn(newHourlyEarn);
+
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card.id === selectedCard.id
+            ? {
+                ...card,
+                level: newLevel,
+                hourlyIncome: newHourlyIncome,
+                upgradeCost: newUpgradeCost,
+              }
+            : card
+        )
+      );
     }
+    setShowPopup(false);
   };
-  
   
 
   const filteredCards = cards.filter(card => card.category === activeCategory);
