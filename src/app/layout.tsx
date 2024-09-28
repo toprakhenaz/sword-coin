@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
+import { UserProvider } from '@/app/context/UserContext';
 
 
 
@@ -26,8 +27,10 @@ export default function RootLayout({
       <body
         className= "bg-gray-900" style={{ fontFamily: "'Poppins', sans-serif", fontSize: "16px" }}
       >
-        {children}
-        
+        <UserProvider>
+            {children}
+        </UserProvider>
+          
       </body>
     </html>
   );

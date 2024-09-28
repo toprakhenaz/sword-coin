@@ -1,11 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Earn from '@/components/Earn/Earn';
 import { Mission, User } from '@prisma/client';
-import { TelegramUserdata } from '@/types';
 import SkeletonLoading from '../skeleton/SkeletonEarn';
-import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+import { useUserContext } from '../context/UserContext';
 
 
 
@@ -16,7 +15,8 @@ interface UserWithMissions extends User {
 
 export default function EarnPage() {
   const [user, setUser] = useState<UserWithMissions | null>(null);
-  const [telegramUser, setTelegramUser] = useState<TelegramUserdata | null>(null);
+  const { userId, setUserId } = useUserContext();
+
 
   const fetchUserData = async (id: number) => {
     try {
@@ -29,20 +29,12 @@ export default function EarnPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (WebApp.initDataUnsafe?.user) {
-        const tgUser = WebApp.initDataUnsafe.user;
-        setTelegramUser(tgUser as TelegramUserdata);
-        console.log("Telegram User Data:", tgUser);
-        console.log("Telegram User " , telegramUser);
-
-        fetchUserData(tgUser.id);
+        setUserId(userId);
+        fetchUserData(userId);
       } else {
-       
         fetchUserData(1);
       }
-    } else {
-      fetchUserData(1);
-    }
+
   }, []);
 
 
