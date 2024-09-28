@@ -12,13 +12,43 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+model User {
+  id                   Int       @id @default(autoincrement())
+  userName             String
+  userImage            String?   // Kullanıcı resmi opsiyonel olabilir
+  coins                Int
+  energy               Int
+  energyMax            Int
+  league               Int
+  coinsHourly          Int
+  coinsPerTap          Int
+  lastBoostTime        DateTime
+  dailyBoostCount      Int
+  dailyCardRewardClaimed Boolean @default(false)
+  foundCards           String    
+  dailyRewardDate      DateTime  @default(now()) 
+  dailyRewardStreak    Int       @default(1)
+  dailyRewardClaimed   Boolean   @default(false)
+  cards                UserCardData[]
+  refferances          Refferance[]
+  missions              Mission[] 
+}
+
+model Mission {
+  id           Int      @id @default(autoincrement())
+  missionDate   DateTime
+  isClaimed    Boolean  @default(false) 
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+}
+
 model UserCardData {
   id     Int  @id @default(autoincrement())
   user   User @relation(fields: [userId], references: [id])
   userId Int
   cardId Int
   level  Int
-  @@unique([userId, cardId]) 
+  @@unique([userId, cardId])
 }
 
 model Refferance {
@@ -28,27 +58,6 @@ model Refferance {
   refferanceAmount Int
   isClaimed        Boolean
   previousLig      Int
-}
-
-model User {
-  id             Int      @id @default(autoincrement())
-  userName       String
-  userImage      String?  // Kullanıcı resmi opsiyonel olabilir
-  coins          Int
-  energy         Int
-  energyMax      Int
-  league         Int
-  coinsHourly    Int
-  coinsPerTap    Int
-  lastBoostTime  DateTime
-  dailyBoostCount Int
-  dailyCardRewardClaimed Boolean @default(false)
-  foundCards     String    
-  dailyRewardDate DateTime @default(now()) 
-  dailyRewardStreak Int @default(1)
-  dailyRewardClaimed Boolean @default(false)
-  cards          UserCardData[]    
-  refferances    Refferance[]  
 }
 
 model DailyCombo {

@@ -3,12 +3,12 @@
 import React, { useState, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Navbar from '../Navbar';
-import { Alert , AlertDescription, AlertTitle } from './Alert';
+import { Alert, AlertDescription, AlertTitle } from './Alert';
 import { icons } from '@/icons';
 import { Progress } from './Progress';
-import { Card, CardContent} from './EarnCard';
+import { Card, CardContent } from './EarnCard';
 import HeaderCard from '../HeaderCard';
-
+import { Mission, User } from '@prisma/client';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
@@ -20,21 +20,6 @@ export const Button: React.FC<ButtonProps> = ({ className, children, ...props })
     {children}
   </button>
 );
-
-
-interface User {
-  coins: number;
-  hourlyEarn: number;
-  lastRewardDate: string;
-  rewardStreak: number;
-}
-
-const user: User = {
-  coins: 1000,
-  hourlyEarn: 10,
-  lastRewardDate: '',
-  rewardStreak: 0
-};
 
 interface SpecialOffer {
   title: string;
@@ -65,7 +50,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   );
 };
 
-const Earn: React.FC = () => {
+interface UserWithMissions extends User{
+  missions: Mission[]; // Burada görevleri ekliyoruz
+}
+
+interface UserType {
+  user: UserWithMissions; // Kullanıcı tipi burada güncellendi
+}
+
+export default function Earn({ user }: UserType) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string>('');
@@ -86,21 +79,21 @@ const Earn: React.FC = () => {
 
   const handleDailyReward = (): void => {
     const today = new Date().toLocaleDateString();
-    if (user.lastRewardDate === today) {
+    
+    if (user.dailyRewardDate.toLocaleDateString() === today) {
       showPopup('Zaten ödül aldınız!');
       return;
     }
 
-    const lastDate = user.lastRewardDate ? new Date(user.lastRewardDate) : null;
+    const lastDate = user.dailyRewardDate ? new Date(user.dailyRewardDate) : null;
     if (lastDate && lastDate.getDate() === new Date().getDate() - 1) {
-      user.rewardStreak += 1;
+      user.dailyRewardStreak += 1;
     } else {
-      user.rewardStreak = 1;
+      user.dailyRewardStreak = 1;
     }
 
-    user.coins += dailyRewards[user.rewardStreak - 1];
-    user.lastRewardDate = today;
-    showPopup(`Günün ödülü: ${dailyRewards[user.rewardStreak - 1]} coin aldınız!`);
+    user.coins += dailyRewards[user.dailyRewardStreak - 1];
+    showPopup(`Günün ödülü: ${dailyRewards[user.dailyRewardStreak - 1]} coin aldınız!`);
     setModalOpen(false);
   };
 
@@ -116,14 +109,14 @@ const Earn: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white p-4 mx-auto min-h-screen">
-      <HeaderCard coins={user.coins} hourlyEarn={user.hourlyEarn} />
+      <HeaderCard coins={user.coins} hourlyEarn={user.coinsHourly} />
 
       <Card className="bg-gradient-to-r from-yellow-600 to-yellow-800 mb-4">
         <CardContent className="p-4">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="font-bold text-lg">Günlük Ödül</h3>
-              <p className="text-sm">Streak: {user.rewardStreak} gün</p>
+              <p className="text-sm">Streak: {user.dailyRewardStreak} gün</p>
             </div>
             <Button 
               onClick={() => setModalOpen(true)}
@@ -133,12 +126,12 @@ const Earn: React.FC = () => {
               Ödülü Al
             </Button>
           </div>
-          <Progress value={(user.rewardStreak / 7) * 100} className="mt-2" />
+          <Progress value={(user.dailyRewardStreak / 7) * 100} className="mt-2" />
         </CardContent>
       </Card>
 
       <h2 className="text-xl font-bold mb-4">Özel Teklifler</h2>
-      <div className="space-y-4 overflow-y-auto" style={{ maxHeight: '55vh' , minHeight : '45vh'}}>
+      <div className="space-y-4 overflow-y-auto" style={{ maxHeight: '55vh', minHeight: '45vh' }}>
         {specialOffers.map((offer, index) => (
           <Card key={index} className="bg-gray-800">
             <CardContent className="p-4">
@@ -166,7 +159,7 @@ const Earn: React.FC = () => {
           {dailyRewards.map((reward, index) => (
             <li key={index} className="flex justify-between items-center">
               <span>Gün {index + 1}</span>
-              <span className={`font-bold ${index + 1 === user.rewardStreak ? 'text-yellow-500' : ''}`}>
+              <span className={`font-bold ${index + 1 === user.dailyRewardStreak ? 'text-yellow-500' : ''}`}>
                 {reward} coin
               </span>
             </li>
@@ -194,5 +187,3 @@ const Earn: React.FC = () => {
     </div>
   );
 };
-
-export default Earn;

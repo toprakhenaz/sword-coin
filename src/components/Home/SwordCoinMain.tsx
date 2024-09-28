@@ -1,5 +1,5 @@
 'use client';
-
+// TODO : console logları sil 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '@/components/Home/Header';
 import CoinDisplay from '@/components/Home/CoinDisplay';

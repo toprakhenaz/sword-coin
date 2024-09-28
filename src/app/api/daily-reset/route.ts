@@ -12,11 +12,6 @@ function selectRandomCards(count: number): number[] {
 
 export async function POST(req: Request) {
   try {
-    // Verify the cron job secret
-    const authHeader = req.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     // Select 3 random cards for the daily combo
     const dailyCombo = selectRandomCards(3);
@@ -26,6 +21,8 @@ export async function POST(req: Request) {
       data: {
         foundCards: '',
         dailyCardRewardClaimed: false,
+        dailyBoostCount : 3,
+        lastBoostTime : new Date('2023-05-15T14:30:00Z'),
       },
     });
 
