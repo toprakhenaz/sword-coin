@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         coins,
         dailyRewardStreak,
         dailyRewardDate: new Date(dailyRewardDate),
-        dailyRewardClaimed : true,
+        dailyRewardClaimed : dailyRewardClaimed,
       },
     });
 
