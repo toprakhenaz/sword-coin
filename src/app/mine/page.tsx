@@ -1,39 +1,55 @@
-import MainPage from "@/components/Mine/SwordCoinMine"
-import prisma from "@/db";
-import WebApp from "@twa-dev/sdk";
+'use client';
 
-export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import MainPage from "@/components/Mine/SwordCoinMine";
+import { User, UserCardData } from '@prisma/client';
+import { TelegramUserdata } from '@/types';
+import SkeletonLoading from '../skeleton/SkeletonMine';
 
 
-export default async function Mine(){
-  let TelegramUser;
+interface UserWithCards extends User {
+  cards: UserCardData[];
+}
 
-  if (WebApp.initDataUnsafe.user) {
-    TelegramUser = WebApp.initDataUnsafe.user;
-    console.log("Telegram User Data:", TelegramUser);
+export default function Mine() {
+  const [user, setUser] = useState<UserWithCards | null>(null);
+  const [telegramUser, setTelegramUser] = useState<TelegramUserdata | null>(null);
+  const fetchUserData = async (id: number) => {
+    try {
+      const response = await axios.post('/api/fetch-mine', { userId: id });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const WebApp = require('@twa-dev/sdk'); 
+      if (WebApp.initDataUnsafe?.user) {
+        const tgUser = WebApp.initDataUnsafe.user;
+        setTelegramUser(tgUser as TelegramUserdata);
+        console.log("Telegram User Data:", tgUser);
+        console.log("Telegram User " , telegramUser);
+
+        fetchUserData(tgUser.id);
+      } else {
+       
+        fetchUserData(1);
+      }
+    } else {
+      fetchUserData(1);
+    }
+  }, []);
+
+
+
+  // Kullanıcı verisi yüklenmemişse veya boşsa gösterilecek durum
+  if (!user) {
+    return <SkeletonLoading />;
   }
 
-  const userId = TelegramUser ? TelegramUser.id : 1;
 
-  const data = await prisma.user.findUnique({
-    where: { id: userId }, // Kullanıcının ID'sine göre sorgulama yapıyoruz
-    include: {
-      cards: {
-        select: {
-          id : true,
-          cardId: true,
-          level: true,
-          userId: true,
-        },
-      }
-    },
-  });
-  
-    if(!data) {
-      return 'Not found';
-    }
-
-  return (
-    <MainPage user={data}/>
-  )
+  return <MainPage user={user} />;
 }

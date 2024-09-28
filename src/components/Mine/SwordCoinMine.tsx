@@ -12,7 +12,6 @@ import { CardData } from '@/types';
 import HeaderCard from '../HeaderCard';
 import { User } from '@prisma/client';
 import axios from 'axios';
-import SkeletonLoading from '@/app/skeleton/SkeletonMine';
 
 interface UserType {
   user: User & { cards: { id: number; userId: number; cardId: number; level: number }[] };
@@ -58,17 +57,12 @@ const MainPage = ({ user }: UserType) => {
   const [cardFounded, setCardFounded] = useState(false);
   const [foundCards, setFoundCards] = useState<number[]>(user.foundCards.split(',').map(Number)); 
   const [activeCategory, setActiveCategory] = useState("Ekipman");
-  const [isloading, setIsloading] = useState(true);
   const [allCardsFound, setAllCardsFound] = useState(user.dailyCardRewardClaimed); 
   const [dailyCardFoundPopup , setDailyCardFoundPopup] = useState(false);
   const [dailyCombo, setDailyCombo] = useState<number[]>([]);
 
 
-  useEffect(() => {
-    setInterval(() => {
-      setIsloading(false);
-    }, 1000);
-  });
+  
 
   useEffect(() => {
     const fetchDailyCombo = async () => {
@@ -166,9 +160,7 @@ const MainPage = ({ user }: UserType) => {
 
   const filteredCards = cards.filter(card => card.category === activeCategory);
 
-  return isloading ? (
-    <SkeletonLoading />
-  ) : (
+  return (
     <div className="min-h-screen flex flex-col p-4 sm:p-1 space-y-4 bg-gray-900 text-white font-['Poppins',sans-serif]">
       <HeaderCard coins={coins} hourlyEarn={hourlyEarn} />
       <TimerBar dailyCombo={dailyCombo} foundCards={foundCards} /> 

@@ -1,47 +1,58 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import MainPage from "@/components/Home/SwordCoinMain";
-import prisma from "@/db";
-import WebApp from "@twa-dev/sdk";
-
-export const revalidate = 0; // ISR devre dışı, her istekte yeni veri çeker
-
-
-export default async function Home() {
-  // Telegram kullanıcı verisini al
-  let TelegramUser;
-
-  if (WebApp.initDataUnsafe.user) {
-    TelegramUser = WebApp.initDataUnsafe.user;
-    console.log("Telegram User Data:", TelegramUser);
-  }
-
-  const userId = TelegramUser ? TelegramUser.id : 1;
-
-  let user = await prisma.user.findFirst({
-    where: { id: userId },
-  });
+import { TelegramUserdata } from '@/types'; 
+import { User } from '@prisma/client';
+import SkeletonLoading from './skeleton/SkeletonMain';
 
 
+const defaultTelegramUser = {
+  id: 1,
+  first_name: 'ali',
+  last_name: 'yusuf',
+  username: 'ali_yusuf',
+  language_code: 'tr',
+  is_premium: false,
+  added_to_attachment_menu: false,
+  allows_write_to_pm: false
+
+}
+
+export default function Home() {
+  const [user, setUser] = useState<User | null>(null);
+  const [telegramUser, setTelegramUser] = useState<TelegramUserdata | undefined>(undefined);
+
+  const fetchUserData = async (telegramuser: TelegramUserdata) => {
+    try {
+      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const WebApp = require('@twa-dev/sdk'); 
+      if (WebApp.initDataUnsafe?.user) {
+        const tgUser = WebApp.initDataUnsafe.user;
+        setTelegramUser(tgUser as TelegramUserdata);
+        console.log("Telegram User Data:", tgUser);
+        console.log("Telegram User " , telegramUser);
+
+        fetchUserData(tgUser);
+      } else {
+       
+        fetchUserData(defaultTelegramUser);
+      }
+    } else {
+      fetchUserData(defaultTelegramUser);
+    }
+  }, []);
   if (!user) {
-    user = await prisma.user.create({
-      data: {
-        id : TelegramUser?.id || 2,
-        userName: TelegramUser?.username || "Anonymous",  
-        userImage: null,  
-        coins: 0,  
-        energy: 100, 
-        energyMax: 100,
-        league: 1,  
-        coinsHourly: 10,  
-        coinsPerTap: 1, 
-        lastBoostTime: new Date(),  
-        dailyBoostCount: 0,
-        dailyCardRewardClaimed: false,
-        foundCards: "",  
-        dailyRewardDate: new Date(),  
-        dailyRewardStreak: 1,
-        dailyRewardClaimed: false,
-      },
-    });
+    return <SkeletonLoading />;
   }
 
   return (

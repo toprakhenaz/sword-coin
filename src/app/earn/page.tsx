@@ -1,37 +1,56 @@
-import Earn from '@/components/Earn/Earn'
-import prisma from '@/db';
-import WebApp from '@twa-dev/sdk';
+'use client';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Earn from '@/components/Earn/Earn';
+import { Mission, User } from '@prisma/client';
+import { TelegramUserdata } from '@/types';
+import SkeletonLoading from '../skeleton/SkeletonEarn';
 
-export default async function earn() {
 
-  let TelegramUser;
 
-  if (WebApp.initDataUnsafe.user) {
-    TelegramUser = WebApp.initDataUnsafe.user;
-    console.log("Telegram User Data:", TelegramUser);
+interface UserWithMissions extends User {
+  missions: Mission[];
+}
+
+export default function EarnPage() {
+  const [user, setUser] = useState<UserWithMissions | null>(null);
+  const [telegramUser, setTelegramUser] = useState<TelegramUserdata | null>(null);
+
+  const fetchUserData = async (id: number) => {
+    try {
+      const response = await axios.post('/api/fetch-earn', { userId: id });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const WebApp = require('@twa-dev/sdk'); 
+      if (WebApp.initDataUnsafe?.user) {
+        const tgUser = WebApp.initDataUnsafe.user;
+        setTelegramUser(tgUser as TelegramUserdata);
+        console.log("Telegram User Data:", tgUser);
+        console.log("Telegram User " , telegramUser);
+
+        fetchUserData(tgUser.id);
+      } else {
+       
+        fetchUserData(1);
+      }
+    } else {
+      fetchUserData(1);
+    }
+  }, []);
+
+
+
+  // Kullanıcı verisi yüklenmemişse veya boşsa gösterilecek durum
+  if (!user) {
+    return <SkeletonLoading />;
   }
 
-  const userId = TelegramUser ? TelegramUser.id : 1;
 
-  const data = await prisma.user.findUnique({
-    where: { id: userId }, // Kullanıcının ID'sine göre sorgulama yapıyoruz
-    include: {
-      missions: {
-        select: {
-          id : true,
-          isClaimed: true,
-          userId : true,
-          missionDate : true,
-        },
-      }
-    },
-  });
-  
-    if(!data) {
-      return 'Not found';
-    }
-
-  return (
-    <Earn user = {data}/>
-  )
+  return <Earn user={user} />;
 }
