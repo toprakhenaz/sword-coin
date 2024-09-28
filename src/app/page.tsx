@@ -6,6 +6,8 @@ import MainPage from "@/components/Home/SwordCoinMain";
 import { TelegramUserdata } from '@/types'; 
 import { User } from '@prisma/client';
 import SkeletonLoading from './skeleton/SkeletonMain';
+import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+
 
 
 const defaultTelegramUser = {
@@ -35,7 +37,6 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const WebApp = require('@twa-dev/sdk'); 
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user;
         setTelegramUser(tgUser as TelegramUserdata);

@@ -6,6 +6,8 @@ import MainPage from "@/components/Mine/SwordCoinMine";
 import { User, UserCardData } from '@prisma/client';
 import { TelegramUserdata } from '@/types';
 import SkeletonLoading from '../skeleton/SkeletonMine';
+import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+
 
 
 interface UserWithCards extends User {
@@ -26,7 +28,6 @@ export default function Mine() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const WebApp = require('@twa-dev/sdk'); 
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user;
         setTelegramUser(tgUser as TelegramUserdata);

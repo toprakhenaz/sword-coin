@@ -5,6 +5,8 @@ import Earn from '@/components/Earn/Earn';
 import { Mission, User } from '@prisma/client';
 import { TelegramUserdata } from '@/types';
 import SkeletonLoading from '../skeleton/SkeletonEarn';
+import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+
 
 
 
@@ -27,7 +29,6 @@ export default function EarnPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const WebApp = require('@twa-dev/sdk'); 
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user;
         setTelegramUser(tgUser as TelegramUserdata);
