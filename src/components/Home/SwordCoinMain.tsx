@@ -129,7 +129,7 @@ export default function MainPage({ user: initialUser }: UserData) {
           earnedCoin = ligEearningCoin[newLig];
           newCoin = newCoin + earnedCoin;
           newCoinsPerTap = newCoinsPerTap + 1;
-          newMaxEnergy =  prevUser.energyMax + prevUser.league * 200;
+          newMaxEnergy =  prevUser.energyMax + prevUser.league * 500;
           setShowPopup(true); 
         }
         if (navigator.vibrate) {

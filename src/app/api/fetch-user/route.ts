@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         energy: 500,
         energyMax: 500,
         league: 1,
-        coinsHourly: 10,
+        coinsHourly: 0,
         coinsPerTap: 1,
         lastBoostTime: new Date('2023-01-01T00:00:00Z'), // Use a specific date in 2023
         dailyBoostCount: 0,
