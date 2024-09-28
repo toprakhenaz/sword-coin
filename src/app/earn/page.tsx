@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect} from 'react';
 import axios from 'axios';
 import Earn from '@/components/Earn/Earn';
 import { Mission, User } from '@prisma/client';
