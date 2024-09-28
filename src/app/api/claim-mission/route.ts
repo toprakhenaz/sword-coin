@@ -3,17 +3,28 @@ import prisma from '@/db';
 
 export async function POST(req: NextRequest) {
   try {
-    const { missionId } = await req.json();
+    const { userId, missionDate, isClaimed, coins } = await req.json();
 
-    // Veritabanında ilgili misyonun isClaimed alanını true yap
-    await prisma.mission.update({
-      where: { id: missionId },
-      data: { isClaimed: true },
+    // Veritabanında yeni bir misyon oluştur
+    const newMission = await prisma.mission.create({
+      data: {
+        userId, 
+        missionDate: new Date(missionDate),
+        isClaimed: isClaimed || false,
+      },
     });
 
-    return NextResponse.json({ message: 'Görev başarıyla tamamlandı.' });
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        coins,
+      },
+    });
+
+
+    return NextResponse.json({ message: 'Görev başarıyla oluşturuldu.', newMission });
   } catch (error) {
-    console.error('Görev güncellenirken hata oluştu:', error);
+    console.error('Görev oluşturulurken hata oluştu:', error);
     return NextResponse.json({ error: 'Bir hata oluştu.' }, { status: 500 });
   }
 }

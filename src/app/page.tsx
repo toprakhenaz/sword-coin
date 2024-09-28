@@ -6,12 +6,10 @@ import MainPage from "@/components/Home/SwordCoinMain";
 import { TelegramUserdata } from '@/types'; 
 import { User } from '@prisma/client';
 import SkeletonLoading from './skeleton/SkeletonMain';
-import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+import WebApp from '@twa-dev/sdk';
 import { useUserContext } from '@/app/context/UserContext';
 
-
-
-const defaultTelegramUser = {
+const defaultTelegramUser: TelegramUserdata = {
   id: 1,
   first_name: 'ali',
   last_name: 'yusuf',
@@ -20,26 +18,28 @@ const defaultTelegramUser = {
   is_premium: false,
   added_to_attachment_menu: false,
   allows_write_to_pm: false
+};
 
+interface TelegramUserDataType {
+  telegramuser: TelegramUserdata;
+  startParam: string; 
 }
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [telegramUser, setTelegramUser] = useState<TelegramUserdata | undefined>(undefined);
   const { userId, setUserId } = useUserContext();
- 
 
-  const fetchUserData = async (telegramuser: TelegramUserdata) => {
+  // API'yi çağıran fonksiyon
+  const fetchUserData = async ({ telegramuser,  startParam }: TelegramUserDataType) => {
     try {
-      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser });
+      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
       setUser(response.data);
       if (response.data) {
         setUserId(response.data.id); // userId'yi burada ayarla
-      }
-      else{
+      } else {
         setUserId(userId);
       }
-
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -48,27 +48,26 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (WebApp.initDataUnsafe?.user) {
-        const tgUser = WebApp.initDataUnsafe.user;
-        setTelegramUser(tgUser as TelegramUserdata);
-        console.log("Telegram User Data:", tgUser);
-        console.log("Telegram User " , telegramUser);
+        const tgUser = WebApp.initDataUnsafe.user as TelegramUserdata;
+        setTelegramUser(tgUser);
+        console.log('Telegram', telegramUser);
 
-        fetchUserData(tgUser);
+        fetchUserData({ telegramuser: tgUser,startParam: WebApp.initDataUnsafe.start_param || '' });
       } else {
-       
-        fetchUserData(defaultTelegramUser);
+        fetchUserData({ telegramuser: defaultTelegramUser,startParam: '' });
       }
     } else {
-      fetchUserData(defaultTelegramUser);
+      fetchUserData({ telegramuser: defaultTelegramUser, startParam: '' });
     }
   }, []);
+
   if (!user) {
     return <SkeletonLoading />;
   }
 
   return (
     <div>
-      <MainPage user={user}></MainPage>
+      <MainPage user={user} />
     </div>
   );
 }

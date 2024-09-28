@@ -54,6 +54,7 @@ export interface TimerBarProps {
 
 export interface AlertProps {
   children: React.ReactNode;
+  isGreen : boolean;
 }
 
 export interface EarnCardProps {

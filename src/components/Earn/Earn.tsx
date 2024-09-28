@@ -33,7 +33,7 @@ export default function Earn({ user }: UserType) {
     const userMission= user.missions.find((userMission) => userMission.id === mission.id);
     return {
       ...mission,
-      isClaimed : userMission?.isClaimed,
+      isClaimed : userMission?.isClaimed  ? userMission?.isClaimed : false,
     };
   });
 
@@ -43,6 +43,7 @@ export default function Earn({ user }: UserType) {
   const [popupMessage, setPopupMessage] = useState<string>('');
   const [dailyRewards] = useState<number[]>(dailyRewardData);
   const [specialOffers, setSpecialOffers] = useState<SpecialOffer[] >(userMissions);
+  const [isGreen , setIsGreen] = useState<boolean>(false);
 
   const showPopup = (message: string): void => {
     setPopupMessage(message);
@@ -50,31 +51,25 @@ export default function Earn({ user }: UserType) {
   };
 
   const handleDailyReward = async (): Promise<void> => {
-    const today = new Date().toLocaleDateString();
     
-    if (user.dailyRewardDate.toLocaleDateString() === today) {
+    if (user.dailyRewardClaimed) {
+      setIsGreen(false);
       showPopup('Zaten ödül aldınız!');
       return;
     }
   
-    const lastDate = user.dailyRewardDate ? new Date(user.dailyRewardDate) : null;
-    if (lastDate && lastDate.getDate() === new Date().getDate() - 1) {
-      user.dailyRewardStreak += 1;
-    } else {
-      user.dailyRewardStreak = 1;
-    }
-  
+    user.dailyRewardStreak += 1;
     user.coins += dailyRewards[user.dailyRewardStreak - 1];
   
     try {
-      // Veritabanında günlük ödül güncelle
       await axios.post('/api/claim-daily-reward', {
         userId: user.id,
         coins: user.coins,
         dailyRewardStreak: user.dailyRewardStreak,
         dailyRewardDate: new Date(),
+        dailyRewardClaimed : true,
       });
-  
+      setIsGreen(true);
       showPopup(`Günün ödülü: ${dailyRewards[user.dailyRewardStreak - 1]} coin aldınız!`);
       setModalOpen(false);
     } catch (error) {
@@ -89,11 +84,11 @@ export default function Earn({ user }: UserType) {
       setTimeout(async () => {
         user.coins += offer.reward;
   
-        await axios.post('/api/claim-mission', { missionId: offer.id });
+        await axios.post('/api/claim-mission', { userId : user.id, missionDate : new Date(), isClaimed : true ,coins : user.coins });
   
         showPopup(`Tebrikler! ${offer.reward} coin kazandınız!`);
         setSpecialOffers(specialOffers.filter(o => o !== offer));
-      }, 10000);
+      }, 5000);
     } catch (error) {
       console.error('Ödül kaydedilirken hata oluştu:', error);
     }
@@ -170,7 +165,7 @@ export default function Earn({ user }: UserType) {
       </Modal>
 
       <Modal isOpen={popupOpen} onClose={() => setPopupOpen(false)}>
-        <Alert>
+        <Alert isGreen = {isGreen}>
           <AlertTitle>Bildirim</AlertTitle>
           <AlertDescription>{popupMessage}</AlertDescription>
         </Alert>

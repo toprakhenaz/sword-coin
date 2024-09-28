@@ -19,12 +19,18 @@ export interface UserData {
 export default function MainPage({ user: initialUser }: UserData) {
   const [Myuser, setUser] = useState(initialUser);
   const [showPopup, setShowPopup] = useState(false);
+  const [welcome , showWelcome] = useState(false);
   const [showLeagueOverlay, setShowLeagueOverlay] = useState(false);
   const [boostMessage, setBoostMessage] = useState('');
   const [earnTapPositions, setEarnTapPositions] = useState<Array<{ id: string; top: number; left: number }>>([]);
   const userRef = useRef(Myuser);
   const centralButtonRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { 
+      if(Myuser.coins === 2500 && Myuser.league === 1) {
+        showWelcome(true);
+      }
+  }, [])
 
   useEffect(() => {
     userRef.current = Myuser;
@@ -169,8 +175,13 @@ export default function MainPage({ user: initialUser }: UserData) {
   const handleClosePopup = () => {
     setShowPopup(false);
     setBoostMessage('');
+    showWelcome(false);
   };
 
+  const handleCloseWelcome = () => {
+    showWelcome(false);
+  }
+ 
 
 
   return (
@@ -214,6 +225,16 @@ export default function MainPage({ user: initialUser }: UserData) {
           onClose={handleClosePopup}
         />
       )}
+
+      {welcome && (
+          <Popup
+          title="Hoşgeldin!!"
+          message="Sword Coin ailesine hoşgeldin, Arkadaşın sana 2500 coin kazandırdı Tebrikler!!"
+          image='/welcome.png'
+          onClose={handleCloseWelcome}
+        />
+        )
+      }
 
 
       {showLeagueOverlay && (

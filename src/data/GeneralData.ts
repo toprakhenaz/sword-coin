@@ -198,4 +198,22 @@ export const missions = [
     {id:6,  title: "Telegram grubuna katıl", reward: 35000, link: "https://t.me/gemz", isClaimed : false },
 ]
 
-export const dailyRewardData = [1000, 2000, 3000, 4000, 5000, 6000, 7000]
+export const dailyRewardData = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
+
+// TODO: Auth date ile giriş tarihini kontrol edebilirsin 
+/* 
+{
+  "user": {
+    "id": 123456789,
+    "first_name": "Ali",
+    "last_name": "Yusuf",
+    "username": "ali_yusuf",
+    "language_code": "tr",
+    "is_premium": false
+  },
+  "auth_date": 1695849600,
+  "hash": "efgh1234...",
+  "start_param": "invite_code_123"
+}
+
+*/
