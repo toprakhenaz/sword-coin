@@ -7,6 +7,7 @@ import { TelegramUserdata } from '@/types';
 import { User } from '@prisma/client';
 import SkeletonLoading from './skeleton/SkeletonMain';
 import WebApp from '@twa-dev/sdk';  // `require` yerine `import` kullanıyoruz
+import { useUserContext } from '@/app/context/UserContext';
 
 
 
@@ -25,11 +26,20 @@ const defaultTelegramUser = {
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [telegramUser, setTelegramUser] = useState<TelegramUserdata | undefined>(undefined);
+  const { userId, setUserId } = useUserContext();
+ 
 
   const fetchUserData = async (telegramuser: TelegramUserdata) => {
     try {
       const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser });
       setUser(response.data);
+      if (response.data) {
+        setUserId(response.data.id); // userId'yi burada ayarla
+      }
+      else{
+        setUserId(userId);
+      }
+
     } catch (error) {
       console.error('Error fetching user data:', error);
     }

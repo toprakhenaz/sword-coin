@@ -1,17 +1,14 @@
 // app/api/user/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from "@/db";
-import { useUserContext } from '@/app/context/UserContext';
 
 
 
 export async function POST(request: NextRequest) {
   const { TelegramUser } = await request.json();
-  const { userId, setUserId } = useUserContext();
 
 
-  const userid = TelegramUser ? TelegramUser.id : 1;
-  setUserId(userid);
+  const userId = TelegramUser ? TelegramUser.id : 1;
   let user = await prisma.user.findFirst({
     where: { id: userId },
   });
