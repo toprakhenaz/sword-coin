@@ -189,11 +189,13 @@ export const saveUserData = async (user: User) => {
   }
 };
 
-export const missons = [
-    {id: 1 , title: "X'te gemz'i takip et", reward: 10000, link: "https://x.com/gemz" },
-    {id: 2, title: "Instagram'da gemz'i takip et", reward: 15000, link: "https://instagram.com/gemz" },
-    {id: 3, title: "Discord'a katıl", reward: 20000, link: "https://discord.gg/gemz" },
-    {id: 4, title: "Arkadaşını davet et", reward: 25000, link: "https://gemz.app/invite" },
-    {id: 5, title: "Gemz uygulamasını değerlendir", reward: 30000, link: "https://play.google.com/store/apps/details?id=com.gemz" },
-    {id:6,  title: "Telegram grubuna katıl", reward: 35000, link: "https://t.me/gemz" },
+export const missions = [
+    {id: 1 , title: "X'te gemz'i takip et", reward: 10000, link: "https://x.com/gemz" , isClaimed : false},
+    {id: 2, title: "Instagram'da gemz'i takip et", reward: 15000, link: "https://instagram.com/gemz" , isClaimed : false},
+    {id: 3, title: "Discord'a katıl", reward: 20000, link: "https://discord.gg/gemz" , isClaimed : false},
+    {id: 4, title: "Arkadaşını davet et", reward: 25000, link: "https://gemz.app/invite", isClaimed : false },
+    {id: 5, title: "Gemz uygulamasını değerlendir", reward: 30000, link: "https://play.google.com/store/apps/details?id=com.gemz", isClaimed : false },
+    {id:6,  title: "Telegram grubuna katıl", reward: 35000, link: "https://t.me/gemz", isClaimed : false },
 ]
+
+export const dailyRewardData = [1000, 2000, 3000, 4000, 5000, 6000, 7000]

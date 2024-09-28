@@ -17,6 +17,7 @@ import {
     faGift,
     faExternalLinkAlt,
     faCopy,
+    faCheck,
   } from '@fortawesome/free-solid-svg-icons';
   
   export const icons = {
@@ -27,6 +28,7 @@ import {
     chevronRight: faChevronRight,
     chevronUp: faChevronUp,
     chevronDown: faChevronDown,
+    check : faCheck,
     hourglassStart: faHourglassStart,
     angleDoubleUp: faAngleDoubleUp,
     arrowRight : faArrowRight,

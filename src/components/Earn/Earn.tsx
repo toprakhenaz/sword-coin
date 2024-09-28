@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, ReactNode } from 'react';
+import React, { useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Navbar from '../Navbar';
 import { Alert, AlertDescription, AlertTitle } from './Alert';
@@ -9,102 +9,94 @@ import { Progress } from './Progress';
 import { Card, CardContent } from './EarnCard';
 import HeaderCard from '../HeaderCard';
 import { Mission, User } from '@prisma/client';
+import { dailyRewardData, missions } from '@/data/GeneralData';
+import Modal from './Modal';
+import { SpecialOffer } from '@/types';
+import { Button } from './Button';
+import axios from 'axios';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
-  children: ReactNode;
-}
 
-export const Button: React.FC<ButtonProps> = ({ className, children, ...props }) => (
-  <button className={`px-4 py-2 rounded ${className}`} {...props}>
-    {children}
-  </button>
-);
-
-interface SpecialOffer {
-  title: string;
-  reward: number;
-  link: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactNode;
-}
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-      <div className="bg-gray-800 rounded-lg p-6 max-w-sm w-full">
-        <div className="flex justify-end">
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
-            <FontAwesomeIcon icon={icons.times} />
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-};
 
 interface UserWithMissions extends User{
-  missions: Mission[]; // Burada görevleri ekliyoruz
+  missions: Mission[]; 
 }
 
 interface UserType {
-  user: UserWithMissions; // Kullanıcı tipi burada güncellendi
+  user: UserWithMissions; 
 }
 
+const initialMissions : SpecialOffer[] = missions;
+
 export default function Earn({ user }: UserType) {
+
+  const userMissions = initialMissions.map((mission) => {
+    const userMission= user.missions.find((userMission) => userMission.id === mission.id);
+    return {
+      ...mission,
+      isClaimed : userMission?.isClaimed,
+    };
+  });
+
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [popupMessage, setPopupMessage] = useState<string>('');
-  const [dailyRewards] = useState<number[]>([1000, 2000, 3000, 4000, 5000, 6000, 7000]);
-  const [specialOffers, setSpecialOffers] = useState<SpecialOffer[]>([
-    { title: "X'te gemz'i takip et", reward: 10000, link: "https://x.com/gemz" },
-    { title: "Instagram'da gemz'i takip et", reward: 15000, link: "https://instagram.com/gemz" },
-    { title: "Discord'a katıl", reward: 20000, link: "https://discord.gg/gemz" },
-    { title: "Arkadaşını davet et", reward: 25000, link: "https://gemz.app/invite" },
-    { title: "Gemz uygulamasını değerlendir", reward: 30000, link: "https://play.google.com/store/apps/details?id=com.gemz" },
-    { title: "Telegram grubuna katıl", reward: 35000, link: "https://t.me/gemz" },
-  ]);
+  const [dailyRewards] = useState<number[]>(dailyRewardData);
+  const [specialOffers, setSpecialOffers] = useState<SpecialOffer[] >(userMissions);
 
   const showPopup = (message: string): void => {
     setPopupMessage(message);
     setPopupOpen(true);
   };
 
-  const handleDailyReward = (): void => {
+  const handleDailyReward = async (): Promise<void> => {
     const today = new Date().toLocaleDateString();
     
     if (user.dailyRewardDate.toLocaleDateString() === today) {
       showPopup('Zaten ödül aldınız!');
       return;
     }
-
+  
     const lastDate = user.dailyRewardDate ? new Date(user.dailyRewardDate) : null;
     if (lastDate && lastDate.getDate() === new Date().getDate() - 1) {
       user.dailyRewardStreak += 1;
     } else {
       user.dailyRewardStreak = 1;
     }
-
+  
     user.coins += dailyRewards[user.dailyRewardStreak - 1];
-    showPopup(`Günün ödülü: ${dailyRewards[user.dailyRewardStreak - 1]} coin aldınız!`);
-    setModalOpen(false);
+  
+    try {
+      // Veritabanında günlük ödül güncelle
+      await axios.post('/api/claim-daily-reward', {
+        userId: user.id,
+        coins: user.coins,
+        dailyRewardStreak: user.dailyRewardStreak,
+        dailyRewardDate: new Date(),
+      });
+  
+      showPopup(`Günün ödülü: ${dailyRewards[user.dailyRewardStreak - 1]} coin aldınız!`);
+      setModalOpen(false);
+    } catch (error) {
+      console.error('Günlük ödül kaydedilirken hata oluştu:', error);
+    }
   };
 
-  const handleSpecialOffer = (offer: SpecialOffer): void => {
-    window.open(offer.link, '_blank');
-    // Simulate reward after 5 seconds (in a real app, you'd verify task completion)
-    setTimeout(() => {
-      user.coins += offer.reward;
-      showPopup(`Tebrikler! ${offer.reward} coin kazandınız!`);
-      setSpecialOffers(specialOffers.filter(o => o !== offer));
-    }, 5000);
+  const handleSpecialOffer = async (offer: SpecialOffer): Promise<void> => {
+    try {
+      window.open(offer.link, '_blank');
+  
+      setTimeout(async () => {
+        user.coins += offer.reward;
+  
+        await axios.post('/api/claim-mission', { missionId: offer.id });
+  
+        showPopup(`Tebrikler! ${offer.reward} coin kazandınız!`);
+        setSpecialOffers(specialOffers.filter(o => o !== offer));
+      }, 10000);
+    } catch (error) {
+      console.error('Ödül kaydedilirken hata oluştu:', error);
+    }
   };
 
   return (
@@ -132,26 +124,30 @@ export default function Earn({ user }: UserType) {
 
       <h2 className="text-xl font-bold mb-4">Özel Teklifler</h2>
       <div className="space-y-4 overflow-y-auto" style={{ maxHeight: '55vh', minHeight: '45vh' }}>
-        {specialOffers.map((offer, index) => (
-          <Card key={index} className="bg-gray-800">
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-bold">{offer.title}</h3>
-                  <p className="text-sm text-yellow-500">{offer.reward} coin</p>
-                </div>
-                <Button 
-                  onClick={() => handleSpecialOffer(offer)}
-                  className="bg-blue-500 hover:bg-blue-600"
-                >
-                  <FontAwesomeIcon icon={icons.externalLinkAlt} className="mr-2" />
-                  Git
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+    {specialOffers.map((offer, index) => (
+      <Card key={index} className="bg-gray-800">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="font-bold">{offer.title}</h3>
+              <p className="text-sm text-yellow-500">{offer.reward} coin</p>
+            </div>
+            <Button 
+              onClick={() => handleSpecialOffer(offer)}
+              className="bg-blue-500 hover:bg-blue-600"
+              disabled={offer.isClaimed} // Eğer isClaimed true ise butonu devre dışı bırak
+            >
+              <FontAwesomeIcon 
+                icon={offer.isClaimed ? icons.check : icons.externalLinkAlt} 
+                className="mr-2" 
+              />
+              {offer.isClaimed ? 'Alındı' : 'Git'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
         <h2 className="text-xl font-bold mb-4">Günlük Ödüller</h2>

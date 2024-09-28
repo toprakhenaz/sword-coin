@@ -129,3 +129,22 @@ export interface TelegramUserdata {
   added_to_attachment_menu?: boolean;
   allows_write_to_pm?: boolean;
 }
+
+export interface SpecialOffer {
+  id: number;
+  title: string;
+  reward: number;
+  link: string;
+  isClaimed?: boolean;
+}
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className?: string;
+  children: ReactNode;
+}
