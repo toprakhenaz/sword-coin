@@ -10,7 +10,7 @@ function selectRandomCards(count: number): number[] {
   return shuffled.slice(0, count).map(card => card.id);
 }
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
 
     // Select 3 random cards for the daily combo
