@@ -24,12 +24,14 @@ export async function POST(request: NextRequest) {
 
       if (referrer) {
         // Referans kaydı ekle
-        await prisma.refferance.create({
+        await prisma.referance.create({
           data: {
-            userId: referrer.id,
-            refferanceAmount: 2500,  // Bu, referans edilen kişiye verilecek coin miktarı
-            isClaimed: false,  // Henüz talep edilmediği için false
-            previousLig: referrer.league,  // Lig durumu kaydediliyor
+            referenceId: referrer.id,
+            referencedId : userId,
+            referancedName : TelegramUser?.username || "Anonymous",
+            referenceAmount: 2500, 
+            isClaimed: false, 
+            previousLig: 1, 
           },
         });
 

@@ -1,81 +1,110 @@
 'use client'
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar';
 import HeaderCard from '../HeaderCard';
-import { SUser} from '@/types';
-import { Myusers } from '@/data/GeneralData';
 import Friends from './Friends';
 import RefferanceRow from './RefferanceRow';
+import { Referance, User } from '@prisma/client';
 
+interface UserWithReferences extends User {
+  references: (Referance & { referencedUser: { league: number } })[];
+}
 
-export default function Referral(){
-  const [users, setUsers] = useState<SUser[]>(Myusers);
-  const [currentUser, setCurrentUser] = useState<SUser>(users[1]); 
+interface UserType {
+  user: UserWithReferences | null;
+}
+
+export default function Referral({ user }: UserType) {
+  const [currentUser, setCurrentUser] = useState<UserWithReferences | null>(user);
+
+  useEffect(() => {
+    if (currentUser) {
+      const fetchReferencedUsersLeague = async () => {
+        const updatedReferences = await Promise.all(
+          currentUser.references.map(async (ref) => {
+            const response = await fetch(`/api/user/${ref.referencedId}`);
+            const referencedUser = await response.json();
+            return {
+              ...ref,
+              referencedUser: { league: referencedUser.league }
+            };
+          })
+        );
+        setCurrentUser(prevUser => prevUser ? { ...prevUser, references: updatedReferences } : null);
+      };
+
+      fetchReferencedUsersLeague();
+    }
+  }, [currentUser]);
 
   const checkReferralLevels = () => {
     if (!currentUser) return;
 
-    const updatedRefferances = currentUser.refferances.map(ref => {
-      const referredUser = users.find(user => user.userId === ref.Id);
-      if (referredUser && referredUser.lig > ref.previousLig) {
-        const ligDifference = referredUser.lig - ref.previousLig;
-        const newAmount = ligDifference * 1000; // Her lig atlaması başına 1000 coin ver
+    const updatedReferences = currentUser.references.map((ref) => {
+      if (ref.referencedUser.league > ref.previousLig) {
+        const ligDifference = ref.referencedUser.league - ref.previousLig;
+        const newAmount = ligDifference * 1000; // 1000 coins per league jump
 
         return {
           ...ref,
-          refferanceAmount: ref.refferanceAmount + newAmount,
-          previousLig: referredUser.lig, // Lig güncelle
+          referenceAmount: ref.referenceAmount + newAmount,
+          previousLig: ref.referencedUser.league,
         };
       }
       return ref;
     });
 
-    // Güncellenmiş referansları mevcut kullanıcıya ayarla
-    setCurrentUser({ ...currentUser, refferances: updatedRefferances });
+    setCurrentUser(prevUser => prevUser ? { ...prevUser, references: updatedReferences } : null);
   };
 
   const collectCoins = (refId: number) => {
     if (!currentUser) return;
 
-    const updatedRefferances = currentUser.refferances.map(ref => {
-      if (ref.Id === refId && !ref.isClaimed) {
-        const updatedUsers = users.map(user => {
-          if (user.userId === currentUser.userId) {
-            return { ...user, coins: user.coins + ref.refferanceAmount };
-          }
-          return user;
-        });
-        setUsers(updatedUsers);
-        return { ...ref, isClaimed: true };
+    const updatedReferences = currentUser.references.map((ref) => {
+      if (ref.id === refId && !ref.isClaimed) {
+        return { 
+          ...ref, 
+          isClaimed: true 
+        };
       }
       return ref;
     });
 
-    setCurrentUser({ ...currentUser, refferances: updatedRefferances });
+    const totalCollected = updatedReferences.find(ref => ref.id === refId)?.referenceAmount || 0;
+
+    setCurrentUser(prevUser => prevUser ? {
+      ...prevUser,
+      references: updatedReferences,
+      coins: prevUser.coins + totalCollected
+    } : null);
   };
 
   useEffect(() => {
-    checkReferralLevels(); // Sayfa yüklendiğinde ligleri kontrol et
-  }, [users]);
+    if (currentUser) {
+      checkReferralLevels();
+    }
+  }, [currentUser?.references]);
+
+  if (!currentUser) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-gray-900 text-white font-sans min-h-screen flex flex-col p-6">
-      <HeaderCard coins={currentUser.coins} hourlyEarn={currentUser.hourlyEarn} />
-      <Friends length={currentUser?.refferances.length || 0} />
-      <div className="space-y-4 overflow-y-auto" style={{ minHeight: '25vh', maxHeight : '30vh'}}>
-        {currentUser?.refferances.map((refferance, index) => {
-          const totalEarned = refferance.refferanceAmount; // Toplam kazanç
-          return (
-            <RefferanceRow
-              refferance={refferance}
-              totalEarned={totalEarned}
-              collectCoins={collectCoins}
-              key={index}
-            />
-          );
-        })}
+      <HeaderCard coins={currentUser.coins} hourlyEarn={currentUser.coinsHourly} />
+      <Friends length={currentUser.references.length || 0} />
+      <div className="space-y-4 overflow-y-auto" style={{ minHeight: '25vh', maxHeight: '30vh' }}>
+        {currentUser.references.map((reference, index) => (
+          <RefferanceRow
+            refferance={reference}
+            totalEarned={reference.referenceAmount}
+            collectCoins={collectCoins}
+            key={index}
+          />
+        ))}
       </div>
       <Navbar />
     </div>
   );
-};
+}

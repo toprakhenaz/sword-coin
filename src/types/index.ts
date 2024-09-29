@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, Reference } from "react";
 import { User } from "@prisma/client";
 
 export interface CentralButtonProps {
@@ -68,7 +68,7 @@ export interface ProgressProps {
 }
 
 export interface RefferanceRowProps {
-  refferance: Refferance;
+  refferance: Reference;
   totalEarned: number;
   collectCoins: (refId: number) => void;
 }
@@ -97,23 +97,6 @@ interface Refferance {
   refferanceAmount: number;
   isClaimed: boolean;
   previousLig: number; 
-}
-
-export interface SUser {
-  userName: string;    
-  userId: number;  
-  coins: number;       
-  energy: number;      
-  maxEnergy: number;   
-  lig: number;          
-  hourlyEarn: number; 
-  earnPerTap: number;   
-  lastBoostTime: Date; 
-  dailyBoostCount: number; 
-  cards:  UserCardData[];  
-  dailyCombo: number[];
-  foundCards: number[];
-  refferances: Refferance[];  
 }
 
 export interface UserData {

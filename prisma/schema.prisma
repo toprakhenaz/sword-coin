@@ -30,8 +30,8 @@ model User {
   dailyRewardStreak    Int       @default(1)
   dailyRewardClaimed   Boolean   @default(false)
   cards                UserCardData[]
-  refferances          Refferance[]
-  missions              Mission[] 
+  referances           Referance[]
+  missions             Mission[] 
 }
 
 model Mission {
@@ -51,11 +51,13 @@ model UserCardData {
   @@unique([userId, cardId])
 }
 
-model Refferance {
+model Referance {
   id               Int  @id @default(autoincrement())
-  user             User @relation(fields: [userId], references: [id])
-  userId           Int
-  refferanceAmount Int
+  user             User @relation(fields: [referenceId], references: [id])
+  referenceId      Int
+  referancedName   String
+  referencedId     Int
+  referenceAmount  Int
   isClaimed        Boolean
   previousLig      Int
 }

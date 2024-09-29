@@ -1,29 +1,6 @@
 import { User } from "@prisma/client";
 import axios from "axios";
 
-const date = new Date( 1684275200000);
-
-export const user = {
-  userName: 'ali',
-  userId: 2,
-  coins: 2000000000,
-  energy: 200,
-  maxEnergy: 500,
-  lig: 1,
-  hourlyEarn: 200,
-  earnPerTap: 3,
-  lastBoostTime: date, // or your specific date
-  dailyBoostCount: 3,
-  cards: [
-    { id: 1, level: 2 },
-    { id: 3, level: 1 },
-  ],
-  dailyCombo: [1, 5, 7], // Daily combo card IDs
-  foundCards: [], // Found card IDs
-  lastRewardDate: '', // Date of the last reward claim
-  rewardStreak: 0, // Current streak count
-  refferences : []
-};
 
 export const ligImage: Record<number | string, string> = {
   1: "/ligImages/wooden-sword.png",       // 1. Seviye: Ahşap Kılıç
@@ -96,65 +73,6 @@ export const useLeagueData = () => {
   return { getLeagueImage, getLeagueColor, getLeagueCoin };
 };
 
-export const Myusers = [
-  {
-    userName: 'Ali',
-    userId: 1,
-    coins: 200,
-    energy: 200,
-    maxEnergy: 500,
-    lig: 1,
-    hourlyEarn: 200,
-    earnPerTap: 3,
-    lastBoostTime: new Date(),
-    dailyBoostCount: 3,
-    cards: [{ id: 1, level: 2 }, { id: 3, level: 1 }],
-    dailyCombo: [1, 5, 7],
-    foundCards: [1],
-    refferances: [],
-  },
-  {
-    userName: 'Mehmet',
-    userId: 2,
-    coins: 1500,
-    energy: 250,
-    maxEnergy: 600,
-    lig: 4, // Mehmet lig atladı
-    hourlyEarn: 250,
-    earnPerTap: 5,
-    lastBoostTime: new Date(),
-    dailyBoostCount: 2,
-    cards: [{ id: 2, level: 1 }],
-    dailyCombo: [2, 4, 6],
-    foundCards: [],
-    refferances: [
-      {
-        Id: 1,
-        refferanceAmount: 0,
-        isClaimed: false,
-        previousLig: 2, // Son bilinen lig
-      },
-      {
-        Id: 1,
-        refferanceAmount: 0,
-        isClaimed: false,
-        previousLig: 2, // Son bilinen lig
-      },
-      {
-        Id: 1,
-        refferanceAmount: 0,
-        isClaimed: false,
-        previousLig: 2, // Son bilinen lig
-      },
-      {
-        Id: 1,
-        refferanceAmount: 0,
-        isClaimed: false,
-        previousLig: 2, // Son bilinen lig
-      },
-    ],
-  },
-]
 
 export const calculateEarningsInterval = (hourlyEarn : number) => {
   let intervalDuration; 
