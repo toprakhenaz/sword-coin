@@ -5,25 +5,6 @@ interface LeaderboardEntry {
   avatar: string;
 }
 
-const avatars = [
-  "/user/pp1.png",
-  "/user/pp2.png",
-  "/user/pp3.png",
-  "/user/pp4.png",
-  "/user/pp5.png",
-  "/user/pp6.png",
-  "/user/pp7.png",
-  "/user/pp8.png",
-  "/user/pp9.png",
-  "/user/pp10.png",
-  "/user/pp11.png",
-  "/user/pp12.png",
-  "/user/pp13.png",
-  "/user/pp14.png",
-  "/user/pp15.png",
-  "/user/pp16.png",
-];
-
 
 export const leaderboardData: Record<number, LeaderboardEntry[]> ={
 
