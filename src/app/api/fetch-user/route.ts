@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     //console.log('User ID determined as:', userId); 
     console.log('request:', request);
 
-    let user = await prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: { id: 1 },
     });
 /*
