@@ -24,30 +24,37 @@ interface TelegramUserDataType {
 }
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>();
   const [telegramUser, setTelegramUser] = useState<TelegramUserdata | undefined>(undefined);
   const [loading, setLoading] = useState(true); // Yükleme durumu
 
   const { userId, setUserId } = useUserContext();
 
   // API'yi çağıran fonksiyon
-  const fetchUserData = async ({ telegramuser,  startParam }: TelegramUserDataType) => {
+  const fetchUserData = async ({ telegramuser, startParam }: TelegramUserDataType) => {
     try {
       setLoading(true); // Fetch başlamadan önce yüklemeyi başlat
-
+      console.log('Fetching data for Telegram user:', telegramuser); 
+  
       const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
-      setUser(response.data);
-      if (response.data) {
-        setUserId(response.data.id); // userId'yi burada ayarla
+      
+      if (response.data.success) {
+        setUser(response.data.user);
+        setUserId(response.data.user.id); // userId'yi burada ayarla
+        console.log('Fetched user data:', response.data.user);
       } else {
-        setUserId(userId);
+        // Backend'den gelen hata mesajını burada göster
+        alert(response.data.message);
+        console.error('Backend error message:', response.data.message);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-    }finally {
+      alert('An error occurred while fetching user data.'); // Genel hata mesajı
+    } finally {
       setLoading(false); // Fetch işlemi bitince yüklemeyi durdur
     }
   };
+  
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -55,7 +62,7 @@ export default function Home() {
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user as TelegramUserdata;
         setTelegramUser(tgUser);
-        console.log('Telegram user çalıştı!');
+        console.log('Telegram', telegramUser);
 
         fetchUserData({ telegramuser: tgUser,startParam: WebApp.initDataUnsafe.start_param || '' });
       } else {
@@ -70,11 +77,13 @@ export default function Home() {
   if (loading) {
     return <SkeletonLoading/>;
   }
-
-  // Eğer user hala null ise, hata durumunu yönetin
+else{
+  //Eğer user hala null ise, hata durumunu yönetin
   if (!user) {
     return <div>Error fetching user data</div>;
   }
+}
+
 
   return (
     <div>
