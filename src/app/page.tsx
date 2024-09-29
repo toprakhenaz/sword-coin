@@ -53,6 +53,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      console.log('WebApp.initDataUnsafe:', WebApp.initDataUnsafe);  // Gelen veriyi kontrol edin
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user as TelegramUserdata;
         setTelegramUser(tgUser);
