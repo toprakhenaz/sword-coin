@@ -28,11 +28,15 @@ interface TelegramUserDataType {
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [telegramUser, setTelegramUser] = useState<TelegramUserdata | undefined>(undefined);
+  const [loading, setLoading] = useState(true); // Yükleme durumu
+
   const { userId, setUserId } = useUserContext();
 
   // API'yi çağıran fonksiyon
   const fetchUserData = async ({ telegramuser,  startParam }: TelegramUserDataType) => {
     try {
+      setLoading(true); // Fetch başlamadan önce yüklemeyi başlat
+
       const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
       setUser(response.data);
       if (response.data) {
@@ -61,8 +65,13 @@ export default function Home() {
     }
   }, []);
 
+  if (loading) {
+    return <SkeletonLoading/>;
+  }
+
+  // Eğer user hala null ise, hata durumunu yönetin
   if (!user) {
-    return <SkeletonLoading />;
+    return <div>Error fetching user data</div>;
   }
 
   return (
