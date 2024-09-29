@@ -5,6 +5,7 @@ import { Referance, User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
+import SkeletonLoading from "../skeleton/SkeletonFriends";
 
 interface UserWithReferences extends User {
   referances: Referance[];
@@ -39,7 +40,7 @@ export default function Friends() {
 
   // Eğer yükleniyorsa "Loading..." mesajını göster
   if (loading) {
-    return <div>Loading...</div>;
+    return <SkeletonLoading/>;
   }
 
   // Eğer user hala null ise, hata durumunu yönetin

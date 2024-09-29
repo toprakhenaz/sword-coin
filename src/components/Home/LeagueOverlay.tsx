@@ -64,8 +64,8 @@ export default function LeagueOverlay({ onClose, coins } : LeagueOverlayProps)  
             <Image
               src={getLeagueImage(currentLeague)}
               alt={`League ${currentLeague}`}
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               className="mx-auto relative z-10"
             />
           </div>

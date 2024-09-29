@@ -32,15 +32,6 @@ export default function Friends ({ length } : FriendsProps){
           </div>
         </div>
       </div>
-
-      <div className="flex space-x-3 mb-4">
-        <button className="flex-grow bg-zinc-800 text-white py-3 rounded-xl text-sm font-medium">
-          Arkadaşını Davet Et
-        </button>
-        <button className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center flex-shrink-0">
-          <FontAwesomeIcon icon={icons.copy} className="w-5 h-5" />
-        </button>
-      </div>
     </>
   );
 };
