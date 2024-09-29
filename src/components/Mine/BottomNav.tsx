@@ -1,7 +1,7 @@
 import { BottomNavProps } from "@/types";
 
 export default function BottomNav( { activeCategory, setActiveCategory } : BottomNavProps) {
-  const categories = ["Ekipman", "İşçiler", "Hizmetler", "Özel"];
+  const categories = ["Ekipman", "İşçiler", "Isekai", "Özel"];
 
   return (
     <div className="flex justify-between bg-gray-800 rounded-full p-1 text-xs sm:text-sm">

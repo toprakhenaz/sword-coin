@@ -2,7 +2,7 @@ import { Card, CardContent } from './Earn/EarnCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '@/icons';
 
-export default function HeaderCard ({coins , hourlyEarn} : {coins : number, hourlyEarn : number}) {
+export default function HeaderCard ({coins , hourlyEarn} : {coins ?: number, hourlyEarn ?: number}) {
   return (
     <Card className="bg-gray-800 mb-4">
       <CardContent className="p-4">

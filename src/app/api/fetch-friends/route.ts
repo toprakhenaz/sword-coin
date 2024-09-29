@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
             referancedName: true,
             referencedId: true, 
             referenceId: true,
+            referenceAmount : true,
             isClaimed: true,
           },
         }

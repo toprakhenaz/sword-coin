@@ -2,20 +2,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '@/icons';
 import { RefferanceRowProps } from '@/types';
 
-export default function RefferanceRow ({ refferance, totalEarned, collectCoins } : RefferanceRowProps ) {
+export default function RefferanceRow ({ referance, totalEarned, collectCoins } : RefferanceRowProps ) {
   return (
     <div className="bg-zinc-800 rounded-lg p-3 flex items-center justify-between">
       <div>
-        <div className="font-bold">isim</div>
+        <div className="font-bold">{referance.referancedName}</div>
         <div className="text-sm sm:text-base text-yellow-300 font-semibold">
           <FontAwesomeIcon icon={icons.coins} className="text-yellow-400 ml-1" />
-          +{totalEarned}
+          +{referance.referenceAmount}
         </div>
       </div>
-      {refferance.isClaimed ? (
+      {referance.isClaimed ? (
         <button className="text-gray-500 font-bold p-2">Collected</button>
       ) : (
-        <button className="text-yellow-400 font-bold p-2" onClick={() => collectCoins(refferance.referencedId)}>
+        <button className="text-yellow-400 font-bold p-2" onClick={() => collectCoins(referance.referencedId)}>
           Collect
         </button>
       )}

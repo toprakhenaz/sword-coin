@@ -68,7 +68,7 @@ export interface ProgressProps {
 }
 
 export interface RefferanceRowProps {
-  refferance: Referance;
+  referance: Referance;
   totalEarned: number;
   collectCoins: (refId: number) => void;
 }
