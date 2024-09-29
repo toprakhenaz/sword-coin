@@ -15,8 +15,6 @@ const defaultTelegramUser: TelegramUserdata = {
   last_name: 'yusuf',
   username: 'ali_yusuf',
   language_code: 'tr',
-  is_premium: false,
-  added_to_attachment_menu: false,
   allows_write_to_pm: false
 };
 
