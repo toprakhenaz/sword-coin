@@ -41,7 +41,7 @@ export default function Home() {
       if (response.data.success) {
         setUser(response.data.user);
         setUserId(response.data.user.id); // userId'yi burada ayarla
-        console.log('Fetched user data:', response.data.user);
+        console.log('Fetched user data:', response.data.user , userId);
       } else {
         // Backend'den gelen hata mesajını burada göster
         alert(response.data.message);
