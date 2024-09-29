@@ -59,11 +59,11 @@ const MainPage = ({ user }: UserType) => {
   const [activeCategory, setActiveCategory] = useState("Ekipman");
   const [allCardsFound, setAllCardsFound] = useState(user.dailyCardRewardClaimed); 
   const [dailyCardFoundPopup , setDailyCardFoundPopup] = useState(false);
-  const [dailyCombo, setDailyCombo] = useState<number[]>([]);
+  const [dailyCombo, setDailyCombo] = useState<number[]>([1,2,3]);
 
 
   
-
+/*
   useEffect(() => {
     const fetchDailyCombo = async () => {
       try {
@@ -77,7 +77,7 @@ const MainPage = ({ user }: UserType) => {
     };
 
     fetchDailyCombo();
-  }, []);
+  }, []);*/
 
 
   const handleUpgradeClick = (card: CardData) => {

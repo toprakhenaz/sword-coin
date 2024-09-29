@@ -3,16 +3,17 @@ import prisma from "@/db";
 
 export async function POST(request: NextRequest) {
   try {
-    const { TelegramUser, startParam } = await request.json();
-    console.log('Incoming Telegram User:', TelegramUser); // Gelen Telegram kullanıcısını logla
+    /*const { TelegramUser, startParam } = await request.json();
+    console.log('Incoming Telegram User:', TelegramUser); // Gelen Telegram kullanıcısını logla*/
 
-    const userId = TelegramUser ? TelegramUser.id : 1;
-    console.log('User ID determined as:', userId); 
+    //const userId = TelegramUser ? TelegramUser.id : 1;
+    //console.log('User ID determined as:', userId); 
+    console.log('request:', request);
 
     let user = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: 1 },
     });
-
+/*
     if (!user) {
       console.log('User not found, creating new user with ID:', userId); 
       let coin = 0;
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
         },
       });
       console.log('New user created with ID:', userId);
-    }
+    }*/
 
     return NextResponse.json({ user, success: true });
   } catch (error) {

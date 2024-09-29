@@ -34,9 +34,9 @@ export default function Home() {
   const fetchUserData = async ({ telegramuser, startParam }: TelegramUserDataType) => {
     try {
       setLoading(true); // Fetch başlamadan önce yüklemeyi başlat
-      console.log('Fetching data for Telegram user:', telegramuser); 
+      console.log('Fetching data for Telegram user:', telegramuser, startParam); 
   
-      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
+      const response = await axios.post('/api/fetch-user', { /*TelegramUser: telegramuser, startParam */});
       
       if (response.data.success) {
         setUser(response.data.user);
@@ -60,7 +60,7 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       console.log('WebApp.initDataUnsafe:', WebApp.initDataUnsafe);  // Gelen veriyi kontrol edin
       if (WebApp.initDataUnsafe?.user) {
-        const tgUser = WebApp.initDataUnsafe.user as TelegramUserdata;
+        const tgUser = WebApp.initDataUnsafe.user;
         setTelegramUser(tgUser);
         console.log('Telegram', telegramUser);
 
