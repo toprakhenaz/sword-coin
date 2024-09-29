@@ -15,7 +15,7 @@ export default function RefferanceRow ({ refferance, totalEarned, collectCoins }
       {refferance.isClaimed ? (
         <button className="text-gray-500 font-bold p-2">Collected</button>
       ) : (
-        <button className="text-yellow-400 font-bold p-2" onClick={() => collectCoins(refferance.Id)}>
+        <button className="text-yellow-400 font-bold p-2" onClick={() => collectCoins(refferance.referencedId)}>
           Collect
         </button>
       )}

@@ -1,5 +1,5 @@
-import { ReactNode, Reference } from "react";
-import { User } from "@prisma/client";
+import { ReactNode } from "react";
+import { User , Referance} from "@prisma/client";
 
 export interface CentralButtonProps {
   onClick: () => void; 
@@ -68,7 +68,7 @@ export interface ProgressProps {
 }
 
 export interface RefferanceRowProps {
-  refferance: Reference;
+  refferance: Referance;
   totalEarned: number;
   collectCoins: (refId: number) => void;
 }
