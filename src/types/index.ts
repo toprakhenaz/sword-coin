@@ -87,18 +87,6 @@ export interface CardData {
   category: string;
 }
 
-interface UserCardData {
-  id: number;    
-  level: number; 
-}
-
-interface Refferance {
-  Id: number;
-  refferanceAmount: number;
-  isClaimed: boolean;
-  previousLig: number; 
-}
-
 export interface UserData {
   user: User;
 }
