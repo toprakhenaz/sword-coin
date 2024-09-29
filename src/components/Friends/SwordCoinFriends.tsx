@@ -71,7 +71,6 @@ export default function Referral({ user }: UserType) {
         {currentUser.referances.map((referance, index) => (
           <RefferanceRow
             referance={referance}
-            totalEarned={referance.referenceAmount}
             collectCoins={collectCoins}
             key={index}
           />

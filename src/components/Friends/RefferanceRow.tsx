@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { icons } from '@/icons';
 import { RefferanceRowProps } from '@/types';
 
-export default function RefferanceRow ({ referance, totalEarned, collectCoins } : RefferanceRowProps ) {
+export default function RefferanceRow ({ referance, collectCoins } : RefferanceRowProps ) {
   return (
     <div className="bg-zinc-800 rounded-lg p-3 flex items-center justify-between">
       <div>
