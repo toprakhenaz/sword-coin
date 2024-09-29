@@ -55,10 +55,11 @@ export default function Home() {
       if (WebApp.initDataUnsafe?.user) {
         const tgUser = WebApp.initDataUnsafe.user as TelegramUserdata;
         setTelegramUser(tgUser);
-        console.log('Telegram', telegramUser);
+        console.log('Telegram user çalıştı!');
 
         fetchUserData({ telegramuser: tgUser,startParam: WebApp.initDataUnsafe.start_param || '' });
       } else {
+        console.log("Default çalıştı")
         fetchUserData({ telegramuser: defaultTelegramUser,startParam: '' });
       }
     } else {
