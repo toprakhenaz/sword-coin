@@ -9,6 +9,40 @@ import SkeletonLoading from './skeleton/SkeletonMain';
 import WebApp from '@twa-dev/sdk';
 import { useUserContext } from '@/app/context/UserContext';
 
+interface AxiosErrorConfig {
+  transitional: {
+    silentJSONParsing: boolean;
+    forcedJSONParsing: boolean;
+    clarifyTimeoutError: boolean;
+  };
+  adapter: string[]; // Can also be ["xhr", "http", "fetch"]
+  transformRequest: any[]; // May contain transformers, here it's null
+  transformResponse: any[]; // Same as above
+  timeout: number;
+  xsrfCookieName: string;
+  xsrfHeaderName: string;
+  maxContentLength: number;
+  maxBodyLength: number;
+  env: Record<string, unknown>; // empty in this case
+  headers: {
+    Accept: string;
+    "Content-Type": string;
+  };
+  method: string;
+  url: string;
+  data: string; // Data is usually stringified JSON here
+}
+
+interface AxiosError {
+  message: string;
+  name: string;
+  stack: string;
+  config: AxiosErrorConfig;
+  code: string;
+  status: number; // Status code returned
+}
+
+
 const defaultTelegramUser: TelegramUserdata = {
   id: 1,
   first_name: 'ali',
@@ -47,18 +81,24 @@ export default function Home() {
         alert(response.data.message);
         console.error('Backend error message:', response.data.message);
       }
-    } catch (error : any) {
-      if (error.response) {
-        // Server responded with a status other than 2xx
-        console.error('Response error:', error.response.data);
-      } else if (error.request) {
-        // Request was made, but no response received
-        console.error('No response received:', error.request);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {  // AxiosError olup olmadığını kontrol edin
+        if (error.response) {
+          // Server responded with a status other than 2xx
+          console.error('Response error:', error.response.data);
+        } else if (error.request) {
+          // Request was made, but no response received
+          console.error('No response received:', error.request);
+        } else {
+          // Something happened in setting up the request
+          console.error('Error setting up the request:', error.message);
+        }
       } else {
-        // Something happened in setting up the request
-        console.error('Error setting up the request:', error.message);
+        // Axios dışındaki hataları da ele alabilirsiniz
+        console.error('Unexpected error:', error);
       }
-    } finally {
+    }
+    finally {
       setLoading(false); // Fetch işlemi bitince yüklemeyi durdur
     }
   };
@@ -99,3 +139,4 @@ else{
     </div>
   );
 }
+ 
