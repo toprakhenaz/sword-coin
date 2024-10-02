@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
         user = await prisma.user.create({
           data: {
-            // id'yi manuel olarak geçmeyin
+            id : userId,
             userName: TelegramUser?.username || "Anonymous",
             userImage: null,
             coins: coin,
