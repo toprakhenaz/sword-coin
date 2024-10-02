@@ -16,8 +16,9 @@ export async function POST(request: NextRequest) {
         where: { id: userId },
       });
     }
-    catch{ 
+    catch (error){ 
       errorMessage = 'Usere girmedi';
+      console.log(error);
       if (!user) {
         console.log('User not found, creating new user with ID:', userId); 
         let coin = 0;
