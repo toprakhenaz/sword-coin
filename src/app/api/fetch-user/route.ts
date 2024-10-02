@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from "@/db";
 
 export async function POST(request: NextRequest) {
+  let errorMessage = '';
   try {
     const { TelegramUser, startParam } = await request.json();
     console.log('Incoming Telegram User:', TelegramUser); // Gelen Telegram kullanıcısını logla
@@ -13,17 +14,19 @@ export async function POST(request: NextRequest) {
     let user = await prisma.user.findFirst({
       where: { id: userId },
     });
-
+    errorMessage = 'Usere girmedi';
     if (!user) {
       console.log('User not found, creating new user with ID:', userId); 
       let coin = 0;
-
+      errorMessage = 'usere girdi';
       if (startParam) {
+        errorMessage = errorMessage + ' start parama girdi';
         const referrer = await prisma.user.findFirst({
           where: { id: parseInt(startParam) },
         });
 
         if (referrer) {
+          errorMessage = errorMessage + ' referrere girdi ';
           console.log('Referrer found with ID:', referrer.id); 
           await prisma.referance.create({
             data: {
@@ -68,7 +71,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ user, success: true });
   } catch (error) {
     console.error('Error during user creation or fetching:', error);
-    return NextResponse.json({ message: 'Error fetching or creating user', success: false }, { status: 500 });
+    return NextResponse.json({ message: `${errorMessage}`, success: false }, { status: 500 });
   }
 }
 
