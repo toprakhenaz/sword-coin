@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
         user = await prisma.user.create({
           data: {
-            id: userId,
+            // id'yi manuel olarak geçmeyin
             userName: TelegramUser?.username || "Anonymous",
             userImage: null,
             coins: coin,
@@ -69,10 +69,7 @@ export async function POST(request: NextRequest) {
             dailyRewardClaimed: false,
           },
         });
-        errorMessage += 'userden çıktı'
-        if(user) {
-          errorMessage += 'useri kaydetti';       
-        }
+        
         console.log('New user created with ID:', userId);
       }
     }
