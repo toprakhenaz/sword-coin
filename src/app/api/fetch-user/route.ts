@@ -24,13 +24,13 @@ export async function POST(request: NextRequest) {
         let coin = 0;
         errorMessage = 'usere girdi';
         if (startParam) {
-          errorMessage = errorMessage + ' start parama girdi';
+          errorMessage = ' start parama girdi';
           const referrer = await prisma.user.findFirst({
             where: { id: parseInt(startParam) },
           });
 
           if (referrer) {
-            errorMessage = errorMessage + ' referrere girdi ';
+            errorMessage =' referrere girdi ';
             console.log('Referrer found with ID:', referrer.id); 
             await prisma.referance.create({
               data: {
@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
         });
         console.log('New user created with ID:', userId);
       }
+      return NextResponse.json({ user, success: true });
     }
     return NextResponse.json({ user, success: true });
   } catch (error) {
