@@ -36,7 +36,7 @@ export default function Home() {
       setLoading(true); // Fetch başlamadan önce yüklemeyi başlat
       console.log('Fetching data for Telegram user:', telegramuser, startParam); 
   
-      const response = await axios.post('/api/fetch-user', { /*TelegramUser: telegramuser, startParam */});
+      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
       
       if (response.data.success) {
         setUser(response.data.user);
