@@ -9,38 +9,7 @@ import SkeletonLoading from './skeleton/SkeletonMain';
 import WebApp from '@twa-dev/sdk';
 import { useUserContext } from '@/app/context/UserContext';
 
-interface AxiosErrorConfig {
-  transitional: {
-    silentJSONParsing: boolean;
-    forcedJSONParsing: boolean;
-    clarifyTimeoutError: boolean;
-  };
-  adapter: string[]; // Can also be ["xhr", "http", "fetch"]
-  transformRequest: any[]; // May contain transformers, here it's null
-  transformResponse: any[]; // Same as above
-  timeout: number;
-  xsrfCookieName: string;
-  xsrfHeaderName: string;
-  maxContentLength: number;
-  maxBodyLength: number;
-  env: Record<string, unknown>; // empty in this case
-  headers: {
-    Accept: string;
-    "Content-Type": string;
-  };
-  method: string;
-  url: string;
-  data: string; // Data is usually stringified JSON here
-}
 
-interface AxiosError {
-  message: string;
-  name: string;
-  stack: string;
-  config: AxiosErrorConfig;
-  code: string;
-  status: number; // Status code returned
-}
 
 
 const defaultTelegramUser: TelegramUserdata = {
