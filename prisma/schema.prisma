@@ -13,7 +13,8 @@ datasource db {
 }
 
 model User {
-  id                   Int       @id
+  id                   Int       @id @default(autoincrement())
+  userId               Int       @unique
   userName             String
   userImage            String?   // Kullanıcı resmi opsiyonel olabilir
   coins                Int
