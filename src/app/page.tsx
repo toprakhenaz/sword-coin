@@ -47,9 +47,17 @@ export default function Home() {
         alert(response.data.message);
         console.error('Backend error message:', response.data.message);
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      alert('An error occurred while fetching user data.'); // Genel hata mesajı
+    } catch (error : any) {
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error('Response error:', error.response.data);
+      } else if (error.request) {
+        // Request was made, but no response received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request
+        console.error('Error setting up the request:', error.message);
+      }
     } finally {
       setLoading(false); // Fetch işlemi bitince yüklemeyi durdur
     }
