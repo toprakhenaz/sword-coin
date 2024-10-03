@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     let user ;
     try {
       user = await prisma.user.findFirst({
-        where: { id: userId },
+        where: { userId: userId },
       });
     }
     catch (error){ 
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
         user = await prisma.user.create({
           data: {
-            id : userId,
+            userId : userId,
             userName: TelegramUser?.username || "Anonymous",
             userImage: null,
             coins: coin,

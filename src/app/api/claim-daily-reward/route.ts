@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
     // Veritabanında günlük ödül güncellemesi
     await prisma.user.update({
-      where: { id: userId },
+      where: { userId: userId },
       data: {
         coins,
         dailyRewardStreak,

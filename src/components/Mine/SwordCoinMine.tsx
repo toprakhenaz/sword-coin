@@ -1,6 +1,6 @@
 'use client'
 
-import { /*useEffect*/ useState } from 'react';
+import { /*useEffect*/ useEffect, useState } from 'react';
 import TimerBar from './TimeBar';
 import Card from './Card';
 import BottomNav from './BottomNav';
@@ -63,7 +63,7 @@ const MainPage = ({ user }: UserType) => {
 
 
   
-/*
+
   useEffect(() => {
     const fetchDailyCombo = async () => {
       try {
@@ -77,14 +77,13 @@ const MainPage = ({ user }: UserType) => {
     };
 
     fetchDailyCombo();
-  }, []);*/
+  }, []);
 
 
 
   const handleUpgradeClick = (card: CardData) => {
     if (coins >= card.upgradeCost) {
       setSelectedCard(card);
-      setDailyCombo([1,2,3]);
       setShowPopup(true);
     } else {
       alert("Yeterli coininiz yok!");
