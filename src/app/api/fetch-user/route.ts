@@ -11,14 +11,10 @@ export async function POST(request: NextRequest) {
     console.log('User ID determined as:', userId); 
     console.log('request:', request);
     let user ;
-    try {
       user = await prisma.user.findFirst({
         where: { userId: userId },
       });
-    }
-    catch (error){ 
       errorMessage = 'Usere girmedi';
-      console.log(error);
       if (!user) {
         console.log('User not found, creating new user with ID:', userId); 
         let coin = 0;
@@ -72,8 +68,6 @@ export async function POST(request: NextRequest) {
         
         console.log('New user created with ID:', userId);
       }
-    }
-    return NextResponse.json({ user, success: true });
   } catch (error) {
     console.error('Error during user creation or fetching:', error);
     return NextResponse.json({ message: `${errorMessage}`, success: false }, { status: 500 });
