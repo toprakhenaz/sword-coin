@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { userId: userId },
       include: {
         referances: {
           select: {

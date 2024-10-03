@@ -14,6 +14,7 @@ datasource db {
 
 model User {
   id                   Int       @id @default(autoincrement())
+  userId               Int       @unique
   userName             String
   userImage            String?   // Kullanıcı resmi opsiyonel olabilir
   coins                Int
@@ -33,6 +34,7 @@ model User {
   referances           Referance[]
   missions             Mission[] 
 }
+
 
 model Mission {
   id           Int      @id @default(autoincrement())

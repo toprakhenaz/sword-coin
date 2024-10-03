@@ -9,6 +9,9 @@ import SkeletonLoading from './skeleton/SkeletonMain';
 import WebApp from '@twa-dev/sdk';
 import { useUserContext } from '@/app/context/UserContext';
 
+
+
+
 const defaultTelegramUser: TelegramUserdata = {
   id: 1,
   first_name: 'ali',
@@ -36,7 +39,7 @@ export default function Home() {
       setLoading(true); // Fetch başlamadan önce yüklemeyi başlat
       console.log('Fetching data for Telegram user:', telegramuser, startParam); 
   
-      const response = await axios.post('/api/fetch-user', { /*TelegramUser: telegramuser, startParam */});
+      const response = await axios.post('/api/fetch-user', { TelegramUser: telegramuser, startParam });
       
       if (response.data.success) {
         setUser(response.data.user);
@@ -47,10 +50,24 @@ export default function Home() {
         alert(response.data.message);
         console.error('Backend error message:', response.data.message);
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      alert('An error occurred while fetching user data.'); // Genel hata mesajı
-    } finally {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {  // AxiosError olup olmadığını kontrol edin
+        if (error.response) {
+          // Server responded with a status other than 2xx
+          console.error('Response error:', error.response.data);
+        } else if (error.request) {
+          // Request was made, but no response received
+          console.error('No response received:', error.request);
+        } else {
+          // Something happened in setting up the request
+          console.error('Error setting up the request:', error.message);
+        }
+      } else {
+        // Axios dışındaki hataları da ele alabilirsiniz
+        console.error('Unexpected error:', error);
+      }
+    }
+    finally {
       setLoading(false); // Fetch işlemi bitince yüklemeyi durdur
     }
   };
@@ -91,3 +108,4 @@ else{
     </div>
   );
 }
+ 

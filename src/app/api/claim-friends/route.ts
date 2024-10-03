@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     });
 
     await prisma.user.update({
-      where: { id: userId },
+      where: { userId: userId },
       data: {
         coins,
       },
